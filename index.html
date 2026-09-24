@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#5856e8">
+<title>Business OS</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6fa;color:#172033;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{position:sticky;top:0;background:#fff;border-bottom:1px solid #e5e7eb;z-index:5;padding:16px}
+h1{margin:0;font-size:24px}.muted{color:#6b7280;font-size:12px}
+.nav{display:flex;gap:6px;overflow:auto;margin-top:12px}.nav button,.btn{white-space:nowrap;padding:9px 11px;border:1px solid #ddd;border-radius:9px;background:#fff}.nav .on,.primary{background:#5856e8!important;color:#fff!important;border-color:#5856e8!important;font-weight:700}
+main{max-width:950px;margin:auto;padding:15px}.page{display:none}.page.on{display:block}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:14px;margin-bottom:12px}
+.k{color:#6b7280;font-size:11px}.v{font-size:21px;font-weight:800;margin-top:5px}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{color:#6b7280;font-size:12px}
+input,select{width:100%;padding:10px;border:1px solid #dfe3ea;border-radius:9px;margin-top:5px;background:#fff;font-size:14px}
+.scroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:620px}th,td{text-align:left;padding:9px;border-bottom:1px solid #eee;font-size:13px}th{color:#6b7280;font-size:11px}
+.modal{display:none;position:fixed;inset:0;background:#0007;z-index:20;align-items:flex-end}.modal.open{display:flex}.modalbox{background:#fff;width:100%;padding:17px;border-radius:18px 18px 0 0;max-height:90vh;overflow:auto}
+.tree{overflow:auto;padding:20px;background:#fafbff;border:1px solid #e5e7eb;border-radius:10px}.tree ul{display:flex;justify-content:center;gap:12px;list-style:none;padding:20px 0 0}.node{background:#fff;border:2px solid #dfe2ff;border-radius:10px;padding:8px 10px;min-width:95px;text-align:center}.b{border-color:#72c7a8}
+.bar{height:8px;background:#eee;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:#5856e8}
+.danger{color:#b4233d!important;background:#fff0f2!important;border:0!important}
+@media(min-width:700px){.modal{align-items:center;justify-content:center}.modalbox{width:min(540px,92%);border-radius:16px}.grid{grid-template-columns:repeat(4,1fr)}}@media(max-width:520px){.form{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+<h1>Business OS</h1><div class="muted">Gestion par bouche-à-oreille</div>
+<div class="nav" id="nav">
+<button class="on" data-p="home">🏠 Synthèse</button><button data-p="clients">👤 Clients</button><button data-p="network">🌳 Réseau</button><button data-p="sales">💶 Ventes</button><button data-p="costs">📦 Coûts</button><button data-p="growth">📈 Croissance</button><button data-p="goals">🎯 Objectifs</button>
+</div>
+</header>
+<main>
+<section id="home" class="page on">
+<div class="grid">
+<div class="card"><div class="k">Clients</div><div class="v" id="hc">0</div></div>
+<div class="card"><div class="k">CA</div><div class="v" id="ha">0 €</div></div>
+<div class="card"><div class="k">Coûts</div><div class="v" id="hco">0 €</div></div>
+<div class="card"><div class="k">Bénéfice</div><div class="v" id="hp">0 €</div></div>
+</div>
+<div class="card"><h2>Vue générale</h2><div id="hi"></div></div>
+<div class="card"><h2>Projection</h2><div id="proj"></div></div>
+</section>
+
+<section id="clients" class="page">
+<div class="row"><div><h2>Clients</h2><span class="muted">Chaque client séparément.</span></div><button class="btn primary" onclick="clientForm()">+ Client</button></div>
+<div class="card scroll"><table><thead><tr><th>Client</th><th>Achat</th><th>Total</th><th>Relais</th><th></th></tr></thead><tbody id="ct"></tbody></table></div>
+</section>
+
+<section id="network" class="page">
+<div class="row"><div><h2>🌳 Réseau</h2><span class="muted">Arbre des personnes relais.</span></div><button class="btn primary" onclick="personForm()">+ Personne</button></div>
+<div class="card"><div class="tree" id="tree"></div></div>
+</section>
+
+<section id="sales" class="page">
+<div class="row"><div><h2>💶 Ventes</h2><span class="muted">Une ligne par vente.</span></div><button class="btn primary" onclick="saleForm()">+ Vente</button></div>
+<div class="grid"><div class="card"><div class="k">Ventes</div><div class="v" id="sc">0</div></div><div class="card"><div class="k">CA</div><div class="v" id="sa">0 €</div></div></div>
+<div class="card scroll"><table><thead><tr><th>Date</th><th>Client</th><th>Montant</th><th>Relais</th><th></th></tr></thead><tbody id="st"></tbody></table></div>
+</section>
+
+<section id="costs" class="page">
+<div class="row"><div><h2>📦 Coûts</h2><span class="muted">Les coûts réels uniquement.</span></div><button class="btn primary" onclick="costForm()">+ Coût</button></div>
+<div class="card"><div class="k">Total</div><div class="v" id="co">0 €</div></div>
+<div class="card scroll"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Montant</th><th></th></tr></thead><tbody id="cot"></tbody></table></div>
+</section>
+
+<section id="growth" class="page">
+<h2>📈 Croissance</h2>
+<div class="card"><div class="form"><label>Nouveaux clients / mois<input id="gn" type="number"></label><label>Croissance mensuelle %<input id="gr" type="number"></label></div><br><button class="btn primary" onclick="growthSave()">Enregistrer</button></div>
+<div class="card"><h2>12 mois</h2><div id="gt"></div></div>
+</section>
+
+<section id="goals" class="page">
+<h2>🎯 Objectifs</h2>
+<div class="card"><div class="form"><label>Clients cible<input id="gc" type="number"></label><label>Échéance (mois)<input id="gm" type="number"></label><label>CA cible (€)<input id="gca" type="number"></label></div><br><button class="btn primary" onclick="goalSave()">Enregistrer</button></div>
+<div class="card"><div id="goaltext"></div><div class="bar"><i id="gb"></i></div><br><div id="goalca"></div><div class="bar"><i id="gab"></i></div></div>
+</section>
+</main>
+
+<div class="modal" id="modal"><div class="modalbox"><div class="row"><h2 id="mt">Ajouter</h2><button class="btn" onclick="closeM()">Fermer</button></div><div id="mb"></div></div></div>
+
+<script>
+const K="business_os_data";
+let D=JSON.parse(localStorage.getItem(K)||"null")||{clients:[],people:[],sales:[],costs:[],growth:{n:5,r:10},goals:{c:100,m:12,ca:2500}};
+const save=()=>localStorage.setItem(K,JSON.stringify(D));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
+const eur=n=>new Intl.NumberFormat("fr-BE",{style:"currency",currency:"EUR"}).format(n||0);
+const C=id=>D.clients.find(x=>x.id===id);
+const P=id=>D.people.find(x=>x.id===id);
+const esc=s=>String(s||"").replace(/[&<>"]/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[x]));
+function optsC(v=""){return D.clients.map(x=>`<option value="${x.id}" ${x.id==v?"selected":""}>${esc(x.name)}</option>`).join("")}
+function optsP(v=""){return '<option value="">Direct / inconnu</option>'+D.people.map(x=>`<option value="${x.id}" ${x.id==v?"selected":""}>${esc(x.name)}</option>`).join("")}
+function openM(t,b){mt.textContent=t;mb.innerHTML=b;modal.classList.add("open")}
+function closeM(){modal.classList.remove("open")}
+
+function clientForm(id=""){
+ let c=C(id)||{name:"",src:""};
+ openM(id?"Modifier client":"Nouveau client",`<label>Nom<input id="mn" value="${esc(c.name)}"></label><br><label>Relais<select id="ms">${optsP(c.src)}</select></label><br><button class="btn primary" onclick="saveClient('${id}')">Enregistrer</button>`);
+}
+function saveClient(id){
+ let o={name:mn.value.trim(),src:ms.value};if(!o.name)return;
+ if(id)Object.assign(C(id),o);else D.clients.push({id:uid(),...o});save();closeM();render();
+}
+
+function saleForm(){
+ if(!D.clients.length)return alert("Ajoute d'abord un client.");
+ openM("Nouvelle vente",`<label>Client<select id="scx">${optsC()}</select></label><br><label>Montant (€)<input id="sax" type="number" step=".01"></label><br><label>Date<input id="sdx" type="date" value="${new Date().toISOString().slice(0,10)}"></label><br><label>Relais<select id="srx">${optsP()}</select></label><br><button class="btn primary" onclick="saveSale()">Enregistrer</button>`);
+}
+function saveSale(){D.sales.push({id:uid(),client:scx.value,amount:+sax.value||0,date:sdx.value,relay:srx.value});save();closeM();render()}
+function delSale(id){D.sales=D.sales.filter(x=>x.id!==id);save();render()}
+
+function costForm(){
+ openM("Nouveau coût",`<div class="form"><label>Type<select id="coty"><option>Produit</option><option>Livraison</option><option>Commission relais</option><option>Autre</option></select></label><label>Montant (€)<input id="coam" type="number" step=".01"></label><label>Date<input id="coda" type="date" value="${new Date().toISOString().slice(0,10)}"></label><label>Description<input id="codes"></label></div><br><button class="btn primary" onclick="saveCost()">Enregistrer</button>`);
+}
+function saveCost(){D.costs.push({id:uid(),type:coty.value,amount:+coam.value||0,date:coda.value,desc:codes.value});save();closeM();render()}
+function delCost(id){D.costs=D.costs.filter(x=>x.id!==id);save();render()}
+
+function personForm(id=""){
+ let p=P(id)||{name:"",parent:"",bought:false};
+ openM(id?"Modifier personne":"Nouvelle personne",`<label>Nom<input id="pn" value="${esc(p.name)}"></label><br><label>Rattaché à<select id="pp"><option value="">Aucun</option>${D.people.map(x=>`<option value="${x.id}" ${x.id==p.parent?"selected":""}>${esc(x.name)}</option>`).join("")}</select></label><br><label><input id="pb" type="checkbox" ${p.bought?"checked":""} style="width:auto"> A déjà acheté</label><br><br><button class="btn primary" onclick="savePerson('${id}')">Enregistrer</button>`);
+}
+function savePerson(id){
+ let o={name:pn.value.trim(),parent:pp.value,bought:pb.checked};if(!o.name)return;
+ if(id)Object.assign(P(id),o);else D.people.push({id:uid(),...o});save();closeM();render();
+}
+function branch(parent=""){
+ return D.people.filter(x=>(x.parent||"")===parent).map(x=>`<li><div class="node ${x.bought?"b":""}" onclick="personForm('${x.id}')"><b>${esc(x.name)}</b><br><small>${x.bought?"✓ a acheté":"pas encore"}</small></div>${branch(x.id)}</li>`).join("");
+}
+function growthSave(){D.growth.n=+gn.value||0;D.growth.r=+gr.value||0;save();render()}
+function goalSave(){D.goals.c=+gc.value||0;D.goals.m=+gm.value||1;D.goals.ca=+gca.value||0;save();render()}
+
+function render(){
+ let ca=D.sales.reduce((a,x)=>a+x.amount,0),co=D.costs.reduce((a,x)=>a+x.amount,0);
+ hc.textContent=D.clients.length;ha.textContent=eur(ca);hco.textContent=eur(co);hp.textContent=eur(ca-co);
+ hi.innerHTML=`<div class="row"><span>Personnes relais</span><b>${D.people.length}</b></div><div class="row"><span>Clients reliés</span><b>${D.clients.filter(x=>x.src).length}/${D.clients.length}</b></div><div class="row"><span>Panier moyen</span><b>${eur(D.sales.length?ca/D.sales.length:0)}</b></div>`;
+ let n=D.growth.n,c=D.clients.length,p="";
+ for(let m=1;m<=6;m++){c+=n;p+=`<div class="row" style="margin:8px 0"><span>M${m}</span><b>${Math.round(c)} clients</b></div>`;n*=1+D.growth.r/100}
+ proj.innerHTML=p;
+ ct.innerHTML=D.clients.length?D.clients.map(c=>{let s=D.sales.filter(x=>x.client===c.id),t=s.reduce((a,x)=>a+x.amount,0);return`<tr><td><b>${esc(c.name)}</b></td><td>${s.length?"Oui":"Non"}</td><td>${eur(t)}</td><td>${esc(P(c.src)?.name||"Direct / inconnu")}</td><td><button class="btn" onclick="clientForm('${c.id}')">Modifier</button></td></tr>`}).join(""):'<tr><td colspan="5">Aucun client</td></tr>';
+ tree.innerHTML=D.people.length?`<ul>${branch()}</ul>`:"<div class='muted'>Ajoute des personnes pour créer l'arbre.</div>";
+ sc.textContent=D.sales.length;sa.textContent=eur(ca);
+ st.innerHTML=D.sales.map(s=>`<tr><td>${s.date}</td><td>${esc(C(s.client)?.name||"—")}</td><td>${eur(s.amount)}</td><td>${esc(P(s.relay)?.name||"Direct / inconnu")}</td><td><button class="btn danger" onclick="delSale('${s.id}')">×</button></td></tr>`).join("");
+ co.textContent=eur(co);
+ cot.innerHTML=D.costs.map(x=>`<tr><td>${x.date}</td><td>${esc(x.type)}</td><td>${esc(x.desc)}</td><td>${eur(x.amount)}</td><td><button class="btn danger" onclick="delCost('${x.id}')">×</button></td></tr>`).join("");
+ gn.value=D.growth.n;gr.value=D.growth.r;
+ let gcx=D.clients.length,nn=D.growth.n,g="";
+ for(let m=1;m<=12;m++){gcx+=nn;g+=`<div class="row" style="margin:8px 0"><span>M${m}</span><b>${Math.round(gcx)}</b></div>`;nn*=1+D.growth.r/100}
+ gt.innerHTML=g;gc.value=D.goals.c;gm.value=D.goals.m;gca.value=D.goals.ca;
+ let cp=D.goals.c?Math.min(100,D.clients.length/D.goals.c*100):0,cap=D.goals.ca?Math.min(100,ca/D.goals.ca*100):0;
+ goaltext.textContent=`${D.clients.length}/${D.goals.c} clients — ${cp.toFixed(0)}%`;goalca.textContent=`${eur(ca)}/${eur(D.goals.ca)} — ${cap.toFixed(0)}%`;gb.style.width=cp+"%";gab.style.width=cap+"%";
+}
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".page").forEach(x=>x.classList.remove("on"));document.getElementById(b.dataset.p).classList.add("on");document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");render()});
+render();
+</script>
+</body></html>
