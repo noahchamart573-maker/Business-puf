@@ -21,6 +21,26 @@
   #monthlySalesChart{height:125px!important;max-height:125px!important}
 }
 </style>
+
+<style id="final-mobile-layout-fix">
+html,body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
+body{position:relative}
+header{width:100%;max-width:none;min-width:0}
+main{width:100%;max-width:1050px;min-width:0;margin:0 auto;padding:15px}
+.page,.card,.grid{min-width:0;max-width:100%}
+.nav{width:100%;max-width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.nav::-webkit-scrollbar{display:none}
+#analyticsPanel{width:100%!important;max-width:100%!important;min-width:0!important;overflow:hidden!important}
+#analyticsPanel .chart-wrap{width:100%!important;max-width:100%!important;min-width:0!important;overflow:hidden!important}
+#monthlySalesChart{display:block!important;width:100%!important;max-width:100%!important;height:110px!important;max-height:110px!important}
+@media(max-width:600px){
+  main{padding:10px}
+  .card{padding:11px}
+  #analyticsPanel{padding:10px!important}
+  #analyticsPanel .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #monthlySalesChart{height:100px!important;max-height:100px!important}
+}
+</style>
 </head>
 <body>
 <header>
@@ -98,7 +118,7 @@
   </div>
   <div class="chart-wrap">
     <h3>Ventes par mois</h3>
-    <canvas id="monthlySalesChart" height="220"></canvas>
+    <canvas id="monthlySalesChart"></canvas>
   </div>
 </section>
 </main>
@@ -305,7 +325,7 @@ document.addEventListener('DOMContentLoaded', updateSynthesisPaymentBreakdown);
     const canvas=document.getElementById('monthlySalesChart');
     if(!canvas) return;
     const ctx=canvas.getContext('2d'), rect=canvas.getBoundingClientRect(), ratio=window.devicePixelRatio||1;
-    const w=Math.max(260,Math.floor(rect.width||canvas.parentElement.clientWidth||320)), h=Math.min(150,Math.floor(rect.height||150));
+    const w=Math.max(240,Math.floor(Math.min(rect.width||240,420))), h=Math.min(110,Math.floor(rect.height||110));
     canvas.width=w*ratio; canvas.height=h*ratio; ctx.setTransform(ratio,0,0,ratio,0,0);
     ctx.clearRect(0,0,w,h);
     const months=[];
@@ -353,5 +373,12 @@ document.addEventListener('DOMContentLoaded', updateSynthesisPaymentBreakdown);
   }
   migrate();
 })();
+</script>
+
+<script id="nav-scroll-fix">
+document.addEventListener('DOMContentLoaded',function(){
+  const nav=document.getElementById('nav');
+  if(nav) nav.scrollLeft=0;
+});
 </script>
 </body></html>
