@@ -20,7 +20,7 @@
 <section id="home" class="page on">
 <div class="grid">
 <div class="card"><div class="k">Clients</div><div class="v" id="hc">0</div></div>
-<div class="card"><div class="k">Ventes</div><div class="v" id="hs">0</div></div>
+<div class="card"><div class="k">Ventes</div><div class="v" id="hs">0</div></div><div class="card"><div class="k">Unités vendues</div><div class="v" id="hu">0</div></div>
 <div class="card"><div class="k">CA</div><div class="v" id="ha">0 €</div></div>
 <div class="card"><div class="k">Bénéfice</div><div class="v" id="hp">0 €</div></div>
 </div>
@@ -31,8 +31,8 @@
 
 <section id="clients" class="page">
 <div class="row wrap"><div><h2>Clients</h2><span class="muted">Ici, tu crées tes clients et tu suis leur nombre de ventes.</span></div><button class="btn primary" onclick="clientForm()">+ Client</button></div>
-<div class="card"><div class="statgrid"><div class="mini"><div class="k">Clients</div><b id="ccount">0</b></div><div class="mini"><div class="k">Clients ayant acheté</div><b id="cbuyers">0</b></div><div class="mini"><div class="k">Ventes totales</div><b id="cunits">0</b></div><div class="mini"><div class="k">Panier moyen</div><b id="cavg">0 €</b></div></div></div>
-<div class="card scroll"><table><thead><tr><th>Client</th><th>Ventes</th><th>CA</th><th>Relais</th><th>Dernière vente</th><th></th></tr></thead><tbody id="ct"></tbody></table></div>
+<div class="card"><div class="statgrid"><div class="mini"><div class="k">Clients</div><b id="ccount">0</b></div><div class="mini"><div class="k">Clients ayant acheté</div><b id="cbuyers">0</b></div><div class="mini"><div class="k">Transactions</div><b id="cunits">0</b></div><div class="mini"><div class="k">Unités vendues</div><b id="cunitsprod">0</b></div><div class="mini"><div class="k">Panier moyen</div><b id="cavg">0 €</b></div></div></div>
+<div class="card scroll"><table><thead><tr><th>Client</th><th>Ventes / unités</th><th>CA</th><th>Relais</th><th>Dernière vente</th><th></th></tr></thead><tbody id="ct"></tbody></table></div>
 </section>
 
 <section id="network" class="page">
@@ -44,12 +44,12 @@
 
 <section id="sales" class="page">
 <div class="row wrap"><div><h2>💶 Ventes</h2><span class="muted">Plus besoin de saisir une vente complète : +1 suffit.</span></div></div>
-<div class="card"><div class="hint">Chaque <b>+1 vente</b> te demande directement <b>le prix réellement vendu</b> et <b>la date</b>. Le prix peut donc être différent à chaque vente.</div></div>
-<div class="grid"><div class="card"><div class="k">Ventes</div><div class="v" id="sc">0</div></div><div class="card"><div class="k">CA</div><div class="v" id="sa">0 €</div></div><div class="card"><div class="k">Ce mois</div><div class="v" id="sm">0</div></div><div class="card"><div class="k">Moyenne / jour actif</div><div class="v" id="sd">0</div></div></div>
+<div class="card"><div class="hint">Chaque <b>+1 vente</b> te demande directement <b>le nombre d’unités</b>, <b>le prix total réellement vendu</b> et <b>la date</b>. Une transaction peut donc contenir 1, 2, 3, 4… unités.</div></div>
+<div class="grid"><div class="card"><div class="k">Transactions</div><div class="v" id="sc">0</div></div><div class="card"><div class="k">Unités vendues</div><div class="v" id="su">0</div></div><div class="card"><div class="k">CA</div><div class="v" id="sa">0 €</div></div><div class="card"><div class="k">Ce mois</div><div class="v" id="sm">0</div></div><div class="card"><div class="k">Moyenne / jour actif</div><div class="v" id="sd">0</div></div></div>
 <div class="card"><h2>Calendrier des ventes</h2><div class="calendarhead"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar" id="calendar"></div></div>
 <div class="card"><h2>Ventes par mois</h2><div class="chart" id="saleschart"></div></div>
-<div class="card"><h2>Ajouter une vente</h2><div id="salebuttons"></div></div>
-<div class="card scroll"><table><thead><tr><th>Date</th><th>Client</th><th>Montant</th><th></th></tr></thead><tbody id="st"></tbody></table></div>
+<div class="card"><h2>Ajouter une vente</h2><div class="hint">+1 ajoute une transaction. Tu indiques ensuite le <b>nombre d’unités</b>, le prix total et la date.</div><div id="salebuttons"></div></div>
+<div class="card scroll"><table><thead><tr><th>Date</th><th>Client</th><th>Unités</th><th>Montant</th><th></th></tr></thead><tbody id="st"></tbody></table></div>
 </section>
 
 <section id="costs" class="page">
@@ -72,6 +72,22 @@
 <div class="card"><h2>Progression réelle</h2><div id="goaltext"></div><div class="bar"><i id="gb"></i></div><div class="goalrow"><div class="row"><span>CA</span><b id="goalca"></b></div><div class="bar alt"><i id="gab"></i></div></div><div class="goalrow"><div class="row"><span>Temps écoulé</span><b id="goaltime"></b></div><div class="bar"><i id="gtb"></i></div></div></div>
 <div class="card"><h2>Ce qu'il faut faire pour atteindre l'objectif</h2><div id="goalneed"></div></div>
 </section>
+
+<section id="analyticsPanel" class="panel" style="margin-top:16px">
+  <h2>📊 Évolution réelle</h2>
+  <div class="stats-grid">
+    <div><b id="anUnits">0</b><small>Unités vendues</small></div>
+    <div><b id="anTransactions">0</b><small>Transactions</small></div>
+    <div><b id="anRevenue">0,00 €</b><small>CA total</small></div>
+    <div><b id="anCash">0,00 €</b><small>CA cash</small></div>
+    <div><b id="anCard">0,00 €</b><small>CA carte</small></div>
+    <div><b id="anClients">0</b><small>Clients</small></div>
+  </div>
+  <div class="chart-wrap">
+    <h3>Ventes par mois</h3>
+    <canvas id="monthlySalesChart" height="220"></canvas>
+  </div>
+</section>
 </main>
 
 <div class="modal" id="modal"><div class="modalbox"><div class="row"><h2 id="mt">Ajouter</h2><button class="btn" onclick="closeM()">Fermer</button></div><div id="mb"></div></div></div>
@@ -80,6 +96,7 @@
 const K="business_os_data";
 let D=JSON.parse(localStorage.getItem(K)||"null")||{clients:[],people:[],sales:[],costs:[],goals:{c:100,m:12,ca:2500}};
 D.clients=D.clients||[];D.people=D.people||[];D.sales=D.sales||[];D.costs=D.costs||[];D.goals=D.goals||{c:100,m:12,ca:2500};
+D.sales.forEach(x=>{if(!Number.isFinite(+x.qty)||+x.qty<1)x.qty=1;});
 const save=()=>localStorage.setItem(K,JSON.stringify(D));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
 const eur=n=>new Intl.NumberFormat("fr-BE",{style:"currency",currency:"EUR"}).format(n||0);
@@ -93,21 +110,25 @@ const monthLabel=k=>{let [y,m]=k.split("-").map(Number);return new Date(y,m-1,1)
 function optsP(v=""){return '<option value="">Direct / inconnu</option>'+D.people.map(x=>`<option value="${x.id}" ${x.id==v?"selected":""}>${esc(x.name)}</option>`).join("")}
 function openM(t,b){mt.textContent=t;mb.innerHTML=b;modal.classList.add("open")}
 function closeM(){modal.classList.remove("open")}
-function clientStats(id){let s=D.sales.filter(x=>x.client===id);return {n:s.length,ca:s.reduce((a,x)=>a+(+x.amount||0),0),last:s.map(x=>x.date).sort().pop()||""}}
+function clientStats(id){let s=D.sales.filter(x=>x.client===id);return {n:s.length,units:s.reduce((a,x)=>a+(+x.qty||1),0),ca:s.reduce((a,x)=>a+(+x.amount||0),0),last:s.map(x=>x.date).sort().pop()||""}}
 function clientForm(id=""){
  let c=C(id)||{name:"",src:"",initial:0};
- openM(id?"Modifier client":"Nouveau client",`<label>Nom<input id="mn" value="${esc(c.name)}"></label><br><label>Relais<select id="ms">${optsP(c.src)}</select></label><br><label>Ventes initiales<input id="mi" type="number" min="0" value="${c.initial||0}"></label><br><div class="hint">Les ventes initiales sont enregistrées comme un nombre de ventes déjà réalisées, sans avoir à créer chaque ligne manuellement.</div><br><button class="btn primary" onclick="saveClient('${id}')">Enregistrer</button>`);
+ openM(id?"Modifier client":"Nouveau client",`<label>Nom<input id="mn" value="${esc(c.name)}"></label><br><label>Relais<select id="ms">${optsP(c.src)}</select></label><br><label>Ventes initiales<input id="mi" type="number" min="0" value="${c.initial||0}"></label><br><div class="hint">Les ventes initiales correspondent au nombre de transactions déjà réalisées. Pour chaque vente, tu indiqueras ensuite le <b>nombre d’unités</b>, le prix et la date.</div><br><button class="btn primary" onclick="saveClient('${id}')">Enregistrer</button>`);
 }
 function validDate(d){return /^\d{4}-\d{2}-\d{2}$/.test(d)}
 function askSaleDetails(label="Vente"){
- let amount=prompt(`${label} — Prix de vente (€)`,"");
+ let qty=prompt(`${label} — Nombre d’unités vendues`,"1");
+ if(qty===null)return null;
+ qty=Math.max(1,Math.floor(Number(String(qty).replace(",","."))));
+ if(!Number.isFinite(qty)||qty<1){alert("Nombre d’unités invalide.");return null}
+ let amount=prompt(`${label} — Prix total de la vente (€)`,"");
  if(amount===null)return null;
  amount=Number(String(amount).replace(",","."));
  if(!Number.isFinite(amount)||amount<0){alert("Prix invalide.");return null}
  let d=prompt(`${label} — Date (AAAA-MM-JJ)`,today());
  if(d===null)return null;
  if(!validDate(d)){alert("Format de date invalide.");return null}
- return {amount,date:d};
+ return {qty,amount,date:d};
 }
 function saveClient(id){
  let name=mn.value.trim();
@@ -121,12 +142,15 @@ function saveClient(id){
      let d=prompt("Date des ventes ajoutées (AAAA-MM-JJ)",today());
      if(d===null||!validDate(d)){alert("Modification annulée : date invalide.");return}
      for(let i=0;i<diff;i++){
-       let amount=prompt(`Prix de vente de la vente ${i+1}/${diff} (€)`,"");
+       let qty=prompt(`Unités de la vente ${i+1}/${diff}`,"1");
+       if(qty===null){alert("Modification annulée : ventes supplémentaires non enregistrées.");return}
+       qty=Math.max(1,Math.floor(Number(String(qty).replace(",","."))));
+       if(!Number.isFinite(qty)||qty<1){alert("Nombre d’unités invalide. Modification annulée.");return}
+       let amount=prompt(`Prix total de la vente ${i+1}/${diff} (€)`,"");
        if(amount===null){alert("Modification annulée : ventes supplémentaires non enregistrées.");return}
        amount=Number(String(amount).replace(",","."));
        if(!Number.isFinite(amount)||amount<0){alert("Prix invalide. Modification annulée.");return}
-       D.sales.push({id:uid(),client:id,amount,date:d,relay:src||""});
-       D.sales[D.sales.length-1].amount=amount;
+       D.sales.push({id:uid(),client:id,qty,amount,date:d,relay:src||""});
      }
    }
  }else{
@@ -137,32 +161,48 @@ function saveClient(id){
      if(d===null||!validDate(d)){D.clients=D.clients.filter(x=>x.id!==newId);alert("Client non enregistré : date invalide.");return}
      let created=[];
      for(let i=0;i<initial;i++){
-       let amount=prompt(`Prix de vente de la vente ${i+1}/${initial} (€)`,"");
+       let qty=prompt(`Unités de la vente ${i+1}/${initial}`,"1");
+       if(qty===null){D.clients=D.clients.filter(x=>x.id!==newId);D.sales=D.sales.filter(x=>!created.includes(x.id));alert("Client non enregistré : unités manquantes.");return}
+       qty=Math.max(1,Math.floor(Number(String(qty).replace(",","."))));
+       if(!Number.isFinite(qty)||qty<1){D.clients=D.clients.filter(x=>x.id!==newId);D.sales=D.sales.filter(x=>!created.includes(x.id));alert("Client non enregistré : unités invalides.");return}
+       let amount=prompt(`Prix total de la vente ${i+1}/${initial} (€)`,"");
        if(amount===null){D.clients=D.clients.filter(x=>x.id!==newId);D.sales=D.sales.filter(x=>!created.includes(x.id));alert("Client non enregistré : prix manquant.");return}
        amount=Number(String(amount).replace(",","."));
        if(!Number.isFinite(amount)||amount<0){D.clients=D.clients.filter(x=>x.id!==newId);D.sales=D.sales.filter(x=>!created.includes(x.id));alert("Client non enregistré : prix invalide.");return}
-       let sid=uid();created.push(sid);D.sales.push({id:sid,client:newId,amount,date:d,relay:src||""});
+       let sid=uid();created.push(sid);D.sales.push({id:sid,client:newId,qty,amount,date:d,relay:src||""});
      }
    }
  }
- save();closeM();render();
+ save();closeM();render()
+  if(window.updateBusinessAnalytics) window.updateBusinessAnalytics();
+  updateSynthesisPaymentBreakdown();;
 }
 function addSale(clientId){
  let c=C(clientId);if(!c)return;
  let details=askSaleDetails(`Vente pour ${c.name}`);
  if(!details)return;
- D.sales.push({id:uid(),client:clientId,amount:details.amount,date:details.date,relay:c.src||""});save();render();
+ D.sales.push({id:uid(),client:clientId,qty:details.qty,amount:details.amount,date:details.date,relay:c.src||""});save();render()
+  if(window.updateBusinessAnalytics) window.updateBusinessAnalytics();
+  updateSynthesisPaymentBreakdown();;
 }
 function quickDateSale(clientId){addSale(clientId)}
-function delSale(id){D.sales=D.sales.filter(x=>x.id!==id);save();render()}
+function delSale(id){D.sales=D.sales.filter(x=>x.id!==id);save();render()
+  if(window.updateBusinessAnalytics) window.updateBusinessAnalytics();
+  updateSynthesisPaymentBreakdown();}
 function costForm(){openM("Nouveau coût",`<div class="form"><label>Type<select id="coty"><option>Produit</option><option>Livraison</option><option>Commission relais</option><option>Autre</option></select></label><label>Montant (€)<input id="coam" type="number" step=".01"></label><label>Date<input id="coda" type="date" value="${today()}"></label><label>Description<input id="codes"></label></div><br><button class="btn primary" onclick="saveCost()">Enregistrer</button>`)}
-function saveCost(){D.costs.push({id:uid(),type:coty.value,amount:+coam.value||0,date:coda.value,desc:codes.value});save();closeM();render()}
-function delCost(id){D.costs=D.costs.filter(x=>x.id!==id);save();render()}
+function saveCost(){D.costs.push({id:uid(),type:coty.value,amount:+coam.value||0,date:coda.value,desc:codes.value});save();closeM();render()
+  if(window.updateBusinessAnalytics) window.updateBusinessAnalytics();
+  updateSynthesisPaymentBreakdown();}
+function delCost(id){D.costs=D.costs.filter(x=>x.id!==id);save();render()
+  if(window.updateBusinessAnalytics) window.updateBusinessAnalytics();
+  updateSynthesisPaymentBreakdown();}
 function personForm(id="",parent=""){
  let p=P(id)||{name:"",parent:parent||"",bought:false};let others=D.people.filter(x=>x.id!==id);
  openM(id?"Modifier personne":"Nouvelle personne",`<label>Nom<input id="pn" value="${esc(p.name)}"></label><br><label>Rattaché à<select id="pp"><option value="">Aucun</option>${others.map(x=>`<option value="${x.id}" ${x.id==p.parent?"selected":""}>${esc(x.name)}</option>`).join("")}</select></label><br><label><input id="pb" type="checkbox" ${p.bought?"checked":""}> A déjà acheté</label><br><br><button class="btn primary" onclick="savePerson('${id}')">Enregistrer</button>`);
 }
-function savePerson(id){let name=pn.value.trim();if(!name)return alert("Indique un nom.");let parent=pp.value;if(id&&parent===id)parent="";let o={name,parent,bought:pb.checked};if(id)Object.assign(P(id),o);else D.people.push({id:uid(),...o});save();closeM();render()}
+function savePerson(id){let name=pn.value.trim();if(!name)return alert("Indique un nom.");let parent=pp.value;if(id&&parent===id)parent="";let o={name,parent,bought:pb.checked};if(id)Object.assign(P(id),o);else D.people.push({id:uid(),...o});save();closeM();render()
+  if(window.updateBusinessAnalytics) window.updateBusinessAnalytics();
+  updateSynthesisPaymentBreakdown();}
 function personChildren(id){return D.people.filter(x=>(x.parent||"")===id)}
 function branch(parent=""){
  return D.people.filter(x=>(x.parent||"")===parent).map(x=>{let kids=personChildren(x.id).length;return `<li><div class="node ${x.bought?"b":""}"><b>${esc(x.name)}</b><small>${x.bought?"✓ a acheté":"pas encore"} · ${kids} filleul${kids===1?"":"s"}</small><div class="actions"><button class="btn" onclick="personForm('${x.id}')">Modifier</button><button class="btn primary" onclick="personForm('', '${x.id}')">+ Filleul</button></div></div>${branch(x.id)}</li>`}).join("")
@@ -175,27 +215,107 @@ function actualMonthlyStats(){let months=lastMonths(6),sm=monthlyMap(),cm=client
 function growthRate(vals){if(vals.length<2)return null;let a=vals[vals.length-2],b=vals[vals.length-1];if(a===0)return b>0?null:0;return (b/a-1)*100}
 function avgRecent(vals){let nz=vals.filter(v=>v>0);return nz.length?nz.reduce((a,b)=>a+b,0)/nz.length:0}
 function projectClients(months){let actual=D.clients.length,stats=actualMonthlyStats(),rate=growthRate(stats.clients);let additions=avgRecent(stats.clients);let rows="";for(let i=1;i<=months;i++){let add=rate!==null?Math.max(0,additions*Math.pow(1+Math.max(-.9,rate/100),i-1)):additions;actual+=add;rows+=`<div class="row" style="margin:8px 0"><span>M${i}</span><b>${Math.round(actual)} clients</b></div>`}return rows}
-function goalSave(){D.goals.c=Math.max(0,+gc.value||0);D.goals.m=Math.max(1,+gm.value||1);D.goals.ca=Math.max(0,+gca.value||0);save();render()}
-function renderCalendar(){let el=calendar,now=new Date(),y=now.getFullYear(),m=now.getMonth(),first=new Date(y,m,1),days=new Date(y,m+1,0).getDate(),offset=(first.getDay()+6)%7,counts={};D.sales.forEach(s=>{if(s.date&&s.date.slice(0,7)===`${y}-${String(m+1).padStart(2,"0")}`)counts[s.date]=(counts[s.date]||0)+1});let h="";for(let i=0;i<offset;i++)h+='<div class="day"></div>';for(let d=1;d<=days;d++){let key=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,n=counts[key]||0;h+=`<div class="day ${n?"hot":""}"><div class="num">${d}</div><div class="count">${n?"+"+n:""}</div></div>`}el.innerHTML=h}
-function renderSalesButtons(){if(!D.clients.length){salebuttons.innerHTML='<div class="empty">Ajoute d’abord un client dans l’onglet Clients.</div>';return}salebuttons.innerHTML=D.clients.map(c=>{let st=clientStats(c.id);return `<div class="row" style="padding:9px 0;border-bottom:1px solid #eee"><div><b>${esc(c.name)}</b><div class="muted">${st.n} vente${st.n===1?"":"s"} · ${eur(st.ca)}</div></div><button class="btn primary" onclick="addSale('${c.id}')">+1 vente</button></div>`}).join("")}
-function render(){
- let ca=D.sales.reduce((a,x)=>a+(+x.amount||0),0),costTotal=D.costs.reduce((a,x)=>a+(+x.amount||0),0),stats=actualMonthlyStats(),cur=currentYM(),thisMonth=D.sales.filter(s=>ym(s.date)===cur).length;
- hc.textContent=D.clients.length;hs.textContent=D.sales.length;ha.textContent=eur(ca);hp.textContent=eur(ca-costTotal);hperiod.textContent=`${stats.months[0]} → ${stats.months.at(-1)}`;
+function goalSave(){D.goals.c=Math.max(0,+gc.value||0);D.goals.m=Math.max(1,+gm.value||1);D.goals.ca=Math.max(0,+gca.value||0);save();render()
+  if(window.updateBusinessAnalytics) window.updateBusinessAnalytics();
+  updateSynthesisPaymentBreakdown();}
+function renderCalendar(){let el=calendar,now=new Date(),y=now.getFullYear(),m=now.getMonth(),first=new Date(y,m,1),days=new Date(y,m+1,0).getDate(),offset=(first.getDay()+6)%7,counts={},units={};D.sales.forEach(s=>{if(s.date&&s.date.slice(0,7)===`${y}-${String(m+1).padStart(2,"0")}`){counts[s.date]=(counts[s.date]||0)+1;units[s.date]=(units[s.date]||0)+(+s.qty||1)}});let h="";for(let i=0;i<offset;i++)h+='<div class="day"></div>';for(let d=1;d<=days;d++){let key=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,n=counts[key]||0;h+=`<div class="day ${n?"hot":""}"><div class="num">${d}</div><div class="count">${n?"+"+n+" vente"+(n>1?"s":"")+" · "+(units[key]||0)+" u.":""}</div></div>`}el.innerHTML=h}
+function renderSalesButtons(){if(!D.clients.length){salebuttons.innerHTML='<div class="empty">Ajoute d’abord un client dans l’onglet Clients.</div>';return}salebuttons.innerHTML=D.clients.map(c=>{let st=clientStats(c.id);return `<div class="row" style="padding:9px 0;border-bottom:1px solid #eee"><div><b>${esc(c.name)}</b><div class="muted">${st.n} vente${st.n===1?"":"s"} · ${st.units} unité${st.units===1?"":"s"} · ${eur(st.ca)}</div></div><button class="btn primary" onclick="addSale('${c.id}')">+1 vente</button></div>`}).join("")}
+function render()
+  if(window.updateBusinessAnalytics) window.updateBusinessAnalytics();
+  updateSynthesisPaymentBreakdown();{
+ let ca=D.sales.reduce((a,x)=>a+(+x.amount||0),0),unitsTotal=D.sales.reduce((a,x)=>a+(+x.qty||1),0),costTotal=D.costs.reduce((a,x)=>a+(+x.amount||0),0),stats=actualMonthlyStats(),cur=currentYM(),thisMonth=D.sales.filter(s=>ym(s.date)===cur).length;
+ hc.textContent=D.clients.length;hs.textContent=D.sales.length;hu.textContent=unitsTotal;ha.textContent=eur(ca);hp.textContent=eur(ca-costTotal);hperiod.textContent=`${stats.months[0]} → ${stats.months.at(-1)}`;
  makeChart("homechart",stats.sales,stats.months.map(monthLabel));
  hi.innerHTML=`<div class="row" style="padding:7px 0"><span>Personnes relais</span><b>${D.people.length}</b></div><div class="row" style="padding:7px 0"><span>Clients reliés</span><b>${D.clients.filter(x=>x.src).length}/${D.clients.length}</b></div><div class="row" style="padding:7px 0"><span>Panier moyen / vente</span><b>${eur(D.sales.length?ca/D.sales.length:0)}</b></div><div class="row" style="padding:7px 0"><span>Ventes ce mois</span><b>${thisMonth}</b></div>`;
  let cp=D.goals.c?Math.min(100,D.clients.length/D.goals.c*100):0,cap=D.goals.ca?Math.min(100,ca/D.goals.ca*100):0;homegoal.innerHTML=`<div class="goalrow"><div class="row"><span>Clients</span><b>${D.clients.length}/${D.goals.c}</b></div><div class="bar"><i style="width:${cp}%"></i></div></div><div class="goalrow"><div class="row"><span>CA</span><b>${eur(ca)}/${eur(D.goals.ca)}</b></div><div class="bar alt"><i style="width:${cap}%"></i></div></div>`;
- ccount.textContent=D.clients.length;cbuyers.textContent=D.clients.filter(c=>clientStats(c.id).n>0).length;cunits.textContent=D.sales.length;cavg.textContent=eur(D.sales.length?ca/D.sales.length:0);
- ct.innerHTML=D.clients.length?D.clients.map(c=>{let s=clientStats(c.id);return `<tr><td><b>${esc(c.name)}</b></td><td><b>${s.n}</b> <button class="btn primary" onclick="addSale('${c.id}')">+1</button></td><td>${eur(s.ca)}</td><td>${esc(P(c.src)?.name||"Direct / inconnu")}</td><td>${s.last||"—"}</td><td><button class="btn" onclick="clientForm('${c.id}')">Modifier</button></td></tr>`}).join(""):'<tr><td colspan="6">Aucun client</td></tr>';
+ ccount.textContent=D.clients.length;cbuyers.textContent=D.clients.filter(c=>clientStats(c.id).n>0).length;cunits.textContent=D.sales.length;cunitsprod.textContent=unitsTotal;cavg.textContent=eur(D.sales.length?ca/D.sales.length:0);
+ ct.innerHTML=D.clients.length?D.clients.map(c=>{let s=clientStats(c.id);return `<tr><td><b>${esc(c.name)}</b></td><td><b>${s.n}</b> vente${s.n===1?"":"s"} · <b>${s.units}</b> unité${s.units===1?"":"s"} <button class="btn primary" onclick="addSale('${c.id}')">+1</button></td><td>${eur(s.ca)}</td><td>${esc(P(c.src)?.name||"Direct / inconnu")}</td><td>${s.last||"—"}</td><td><button class="btn" onclick="clientForm('${c.id}')">Modifier</button></td></tr>`}).join(""):'<tr><td colspan="6">Aucun client</td></tr>';
  pcount.textContent=D.people.length;pbought.textContent=D.people.filter(x=>x.bought).length;plinked.textContent=D.clients.filter(x=>x.src).length;proots.textContent=D.people.filter(x=>!x.parent).length;
  tree.innerHTML=D.people.length?`<div class="tree"><ul>${branch()}</ul></div>`:"<div class='empty'>Ajoute des personnes pour créer ton arbre.</div>";
- sc.textContent=D.sales.length;sa.textContent=eur(ca);sm.textContent=thisMonth;let activeDays=new Set(D.sales.filter(s=>ym(s.date)===cur).map(s=>s.date)).size;sd.textContent=activeDays?(thisMonth/activeDays).toFixed(1):"0";renderCalendar();makeChart("saleschart",stats.sales,stats.months.map(monthLabel));renderSalesButtons();
- st.innerHTML=D.sales.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(s=>`<tr><td>${s.date}</td><td>${esc(C(s.client)?.name||"—")}</td><td>${eur(s.amount)}</td><td><button class="btn danger" onclick="delSale('${s.id}')">×</button></td></tr>`).join("")||'<tr><td colspan="4">Aucune vente</td></tr>';
+ sc.textContent=D.sales.length;su.textContent=unitsTotal;sa.textContent=eur(ca);sm.textContent=thisMonth;let activeDays=new Set(D.sales.filter(s=>ym(s.date)===cur).map(s=>s.date)).size;sd.textContent=activeDays?(thisMonth/activeDays).toFixed(1):"0";renderCalendar();makeChart("saleschart",stats.sales,stats.months.map(monthLabel));renderSalesButtons();
+ st.innerHTML=D.sales.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(s=>`<tr><td>${s.date}</td><td>${esc(C(s.client)?.name||"—")}</td><td><b>${+s.qty||1}</b></td><td>${eur(s.amount)}</td><td><button class="btn danger" onclick="delSale('${s.id}')">×</button></td></tr>`).join("")||'<tr><td colspan="5">Aucune vente</td></tr>';
  let totalCost=costTotal;document.getElementById("co").textContent=eur(totalCost);com.textContent=eur(D.costs.filter(x=>ym(x.date)===cur).reduce((a,x)=>a+(+x.amount||0),0));cos.textContent=eur(D.sales.length?totalCost/D.sales.length:0);coc.textContent=D.costs.length;cot.innerHTML=D.costs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(x=>`<tr><td>${x.date}</td><td>${esc(x.type)}</td><td>${esc(x.desc)}</td><td>${eur(x.amount)}</td><td><button class="btn danger" onclick="delCost('${x.id}')">×</button></td></tr>`).join("")||'<tr><td colspan="5">Aucun coût</td></tr>';
  gnew.textContent=stats.clients.at(-1)||0;gsales.textContent=stats.sales.at(-1)||0;let sgr=growthRate(stats.sales),cgr=growthRate(stats.clients);gsalesgrowth.textContent=sgr===null?"—":`${sgr>=0?"+":""}${sgr.toFixed(0)}%`;gclientgrowth.textContent=cgr===null?"—":`${cgr>=0?"+":""}${cgr.toFixed(0)}%`;makeChart("growthchart",stats.sales,stats.months.map(monthLabel));gt.innerHTML=projectClients(12);
  gc.value=D.goals.c;gm.value=D.goals.m;gca.value=D.goals.ca;goaltext.innerHTML=`<div class="row"><span>Clients</span><b>${D.clients.length}/${D.goals.c} — ${cp.toFixed(0)}%</b></div>`;goalca.textContent=`${eur(ca)} / ${eur(D.goals.ca)} — ${cap.toFixed(0)}%`;let timePct=Math.min(100,Math.max(0,1/D.goals.m*100));goaltime.textContent=`Échéance : ${D.goals.m} mois`;gtb.style.width=timePct+"%";gb.style.width=cp+"%";gab.style.width=cap+"%";
  let needC=Math.max(0,D.goals.c-D.clients.length),needCA=Math.max(0,D.goals.ca-ca),months=D.goals.m,avgNew=avgRecent(stats.clients),avgCA=stats.sales.length?ca/Math.max(1,stats.sales.length):0;goalneed.innerHTML=`<div class="row" style="padding:8px 0"><span>Clients encore nécessaires</span><b>${needC}</b></div><div class="row" style="padding:8px 0"><span>≈ nouveaux clients / mois nécessaires</span><b>${(needC/months).toFixed(1)}</b></div><div class="row" style="padding:8px 0"><span>CA encore nécessaire</span><b>${eur(needCA)}</b></div><div class="row" style="padding:8px 0"><span>Ventes / mois nécessaires au rythme actuel</span><b>${avgCA?Math.ceil(needCA/avgCA/months):"—"}</b></div><div class="hint" style="margin-top:8px">Ton rythme récent de nouveaux clients est d’environ <b>${avgNew.toFixed(1)}/mois</b>. Les projections se recalculent automatiquement quand tu ajoutes des ventes ou des clients.</div>`;
 }
-document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".page").forEach(x=>x.classList.remove("on"));document.getElementById(b.dataset.p).classList.add("on");document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");render()});
-render();
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".page").forEach(x=>x.classList.remove("on"));document.getElementById(b.dataset.p).classList.add("on");document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");render()
+  if(window.updateBusinessAnalytics) window.updateBusinessAnalytics();
+  updateSynthesisPaymentBreakdown();});
+render()
+  if(window.updateBusinessAnalytics) window.updateBusinessAnalytics();
+  updateSynthesisPaymentBreakdown();;
+</script>
+
+<div id="synthesisPaymentBreakdown" class="payment-overview">
+  <h3>💳 Répartition des ventes</h3>
+  <div class="payment-cards">
+    <div><strong id="synthCash">0,00 €</strong><span>💵 Cash</span></div>
+    <div><strong id="synthCard">0,00 €</strong><span>💳 Carte</span></div>
+  </div>
+</div>
+<script>
+function updateSynthesisPaymentBreakdown(){
+  const d = typeof data !== 'undefined' ? data : (typeof state !== 'undefined' ? state : null);
+  if(!d) return;
+  const sales = d.sales || [];
+  const sum = method => sales.filter(s=>(s.payment||'cash')===method)
+    .reduce((n,s)=>n+Number(s.price||s.amount||s.total||0),0);
+  const cash=document.getElementById('synthCash'), card=document.getElementById('synthCard');
+  if(cash) cash.textContent=sum('cash').toFixed(2).replace('.',',')+' €';
+  if(card) card.textContent=sum('card').toFixed(2).replace('.',',')+' €';
+}
+document.addEventListener('DOMContentLoaded', updateSynthesisPaymentBreakdown);
+</script>
+
+
+<script>
+(function(){
+  function getDB(){
+    try { return JSON.parse(localStorage.getItem('business_os_data') || '{}'); }
+    catch(e){ return {}; }
+  }
+  function money(n){ return Number(n||0).toLocaleString('fr-BE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
+  function saleDate(s){ return s.date || s.soldAt || s.createdAt || ''; }
+  function saleUnits(s){ return Number(s.units || s.quantity || 1); }
+  function saleAmount(s){ return Number(s.price || s.amount || s.total || 0); }
+  function updateAnalytics(){
+    const d=getDB(), sales=d.sales||[], clients=d.clients||[];
+    const units=sales.reduce((a,s)=>a+saleUnits(s),0);
+    const revenue=sales.reduce((a,s)=>a+saleAmount(s),0);
+    const cash=sales.filter(s=>(s.payment||'cash')==='cash').reduce((a,s)=>a+saleAmount(s),0);
+    const card=sales.filter(s=>(s.payment||'cash')==='card').reduce((a,s)=>a+saleAmount(s),0);
+    const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+    set('anUnits',units); set('anTransactions',sales.length); set('anRevenue',money(revenue));
+    set('anCash',money(cash)); set('anCard',money(card)); set('anClients',clients.length);
+
+    const canvas=document.getElementById('monthlySalesChart');
+    if(!canvas) return;
+    const ctx=canvas.getContext('2d'), rect=canvas.getBoundingClientRect(), ratio=window.devicePixelRatio||1;
+    const w=Math.max(320,Math.floor(rect.width||canvas.parentElement.clientWidth||500)), h=220;
+    canvas.width=w*ratio; canvas.height=h*ratio; ctx.setTransform(ratio,0,0,ratio,0,0);
+    ctx.clearRect(0,0,w,h);
+    const months=[];
+    const now=new Date();
+    for(let i=5;i>=0;i--){const x=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({
+      key:x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0'),
+      label:x.toLocaleDateString('fr-BE',{month:'short'})
+    });}
+    const vals=months.map(m=>sales.filter(s=>saleDate(s).slice(0,7)===m.key).reduce((a,s)=>a+saleUnits(s),0));
+    const max=Math.max(1,...vals), left=34, right=12, top=18, bottom=34, pw=w-left-right, ph=h-top-bottom;
+    ctx.strokeStyle=getComputedStyle(document.body).color; ctx.globalAlpha=.18;
+    ctx.beginPath();ctx.moveTo(left,top);ctx.lineTo(left,h-bottom);ctx.lineTo(w-right,h-bottom);ctx.stroke();ctx.globalAlpha=1;
+    ctx.beginPath();
+    vals.forEach((v,i)=>{const x=left+(pw*i/Math.max(1,vals.length-1)),y=top+ph-(v/max)*ph;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    ctx.strokeStyle=getComputedStyle(document.body).color;ctx.lineWidth=3;ctx.stroke();
+    vals.forEach((v,i)=>{const x=left+(pw*i/Math.max(1,vals.length-1)),y=top+ph-(v/max)*ph;
+      ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle=getComputedStyle(document.body).color;ctx.fill();
+      ctx.fillText(String(v),x-5,y-10);ctx.fillText(months[i].label,x-12,h-12);
+    });
+  }
+  window.updateBusinessAnalytics=updateAnalytics;
+  document.addEventListener('DOMContentLoaded',updateAnalytics);
+  window.addEventListener('storage',updateAnalytics);
+})();
 </script>
 </body></html>
