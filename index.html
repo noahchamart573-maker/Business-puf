@@ -158,7 +158,7 @@ main,.container,.app,.content{width:100%!important;max-width:100%!important;min-
 <div class="grid"><div class="card"><div class="k">Transactions</div><div class="v" id="sc">0</div></div><div class="card"><div class="k">Unités vendues</div><div class="v" id="su">0</div></div><div class="card"><div class="k">CA</div><div class="v" id="sa">0 €</div></div><div class="card"><div class="k">Ce mois</div><div class="v" id="sm">0</div></div><div class="card"><div class="k">Moyenne / jour actif</div><div class="v" id="sd">0</div></div></div>
 <div class="card"><h2>Calendrier des ventes</h2><div class="calendarhead"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar" id="calendar"></div></div>
 <div class="card"><h2>Ventes par mois</h2><div class="chart" id="saleschart"></div></div>
-<div class="card"><h2>Ajouter une vente</h2><div class="hint">+1 ajoute une transaction. Tu indiques ensuite le <b>nombre d’unités</b>, le prix total et la date.</div><div id="salebuttons"></div></div>
+<div class="card"><h2>Ajouter une vente</h2><div class="hint">+1 ajoute une transaction. Tu indiques ensuite le <b>nombre d’unités</b>, la part cash, la part carte et la date.</div><div id="salebuttons"></div></div>
 <div class="card scroll"><table><thead><tr><th>Date</th><th>Client</th><th>Unités</th><th>Montant</th><th></th></tr></thead><tbody id="st"></tbody></table></div>
 </section>
 
@@ -192,7 +192,17 @@ main,.container,.app,.content{width:100%!important;max-width:100%!important;min-
 const K="business_os_data";
 let D=JSON.parse(localStorage.getItem(K)||"null")||{clients:[],people:[],sales:[],costs:[],goals:{c:100,m:12,ca:2500}};
 D.clients=D.clients||[];D.people=D.people||[];D.sales=D.sales||[];D.costs=D.costs||[];D.goals=D.goals||{c:100,m:12,ca:2500};
-D.sales.forEach(x=>{if(!Number.isFinite(+x.qty)||+x.qty<1)x.qty=1;});
+D.sales.forEach(x=>{
+  if(!Number.isFinite(+x.qty)||+x.qty<1)x.qty=1;
+  const amount=Number(x.amount||0);
+  if(x.cashAmount==null && x.cardAmount==null){
+    if(x.payment==="card"){x.cashAmount=0;x.cardAmount=amount;}
+    else {x.cashAmount=amount;x.cardAmount=0;}
+  } else {
+    x.cashAmount=Number(x.cashAmount||0);
+    x.cardAmount=Number(x.cardAmount||0);
+  }
+});
 const save=()=>localStorage.setItem(K,JSON.stringify(D));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
 const eur=n=>new Intl.NumberFormat("fr-BE",{style:"currency",currency:"EUR"}).format(n||0);
@@ -217,19 +227,25 @@ function askSaleDetails(label="Vente"){
  if(qty===null)return null;
  qty=Math.max(1,Math.floor(Number(String(qty).replace(",","."))));
  if(!Number.isFinite(qty)||qty<1){alert("Nombre d’unités invalide.");return null}
- let amount=prompt(`${label} — Prix total de la vente (€)`,"");
- if(amount===null)return null;
- amount=Number(String(amount).replace(",","."));
- if(!Number.isFinite(amount)||amount<0){alert("Prix invalide.");return null}
- let payment=prompt(`${label} — Paiement : tape CASH ou CARTE`,"CASH");
- if(payment===null)return null;
- payment=String(payment).trim().toLowerCase();
- if(payment!=="cash"&&payment!=="carte"&&payment!=="card"){alert("Paiement invalide : CASH ou CARTE.");return null}
- if(payment==="carte") payment="card";
+
+ let cash=prompt(`${label} — Montant payé en CASH (€)`,`0`);
+ if(cash===null)return null;
+ cash=Number(String(cash).replace(",","."));
+ if(!Number.isFinite(cash)||cash<0){alert("Montant cash invalide.");return null}
+
+ let card=prompt(`${label} — Montant payé par CARTE (€)`,`0`);
+ if(card===null)return null;
+ card=Number(String(card).replace(",","."));
+ if(!Number.isFinite(card)||card<0){alert("Montant carte invalide.");return null}
+
+ const amount=Number((cash+card).toFixed(2));
+ if(amount<=0){alert("La vente doit avoir un montant supérieur à 0 €.");return null}
+
  let d=prompt(`${label} — Date (AAAA-MM-JJ)`,today());
  if(d===null)return null;
  if(!validDate(d)){alert("Format de date invalide.");return null}
- return {qty,amount,date:d,payment};
+
+ return {qty,amount,date:d,payment:(cash>0&&card>0)?"mixed":(cash>0?"cash":"card"),cashAmount:cash,cardAmount:card};
 }
 function saveClient(id){
  let name=mn.value.trim();
@@ -240,47 +256,25 @@ function saveClient(id){
    Object.assign(c,{name,src,initial});
    let diff=initial-old;
    if(diff>0){
-     let d=prompt("Date des ventes ajoutées (AAAA-MM-JJ)",today());
-     if(d===null||!validDate(d)){alert("Modification annulée : date invalide.");return}
      for(let i=0;i<diff;i++){
-       let qty=prompt(`Unités de la vente ${i+1}/${diff}`,"1");
-       if(qty===null){alert("Modification annulée : ventes supplémentaires non enregistrées.");return}
-       qty=Math.max(1,Math.floor(Number(String(qty).replace(",","."))));
-       if(!Number.isFinite(qty)||qty<1){alert("Nombre d’unités invalide. Modification annulée.");return}
-       let amount=prompt(`Prix total de la vente ${i+1}/${diff} (€)`,"");
-       if(amount===null){alert("Modification annulée : ventes supplémentaires non enregistrées.");return}
-       amount=Number(String(amount).replace(",","."));
-       if(!Number.isFinite(amount)||amount<0){alert("Prix invalide. Modification annulée.");return}
-       let payment=prompt(`Paiement de la vente ${i+1}/${diff} : CASH ou CARTE`,`CASH`);
-       if(payment===null){alert("Modification annulée : paiement manquant.");return}
-       payment=String(payment).trim().toLowerCase(); if(payment==="carte")payment="card";
-       if(payment!=="cash"&&payment!=="card"){alert("Paiement invalide.");return}
-       D.sales.push({id:uid(),client:id,qty,amount,date:d,payment,relay:src||""});
+       let details=askSaleDetails(`Vente initiale ${i+1}/${diff} pour ${name}`);
+       if(!details){c.initial=old;save();render();return}
+       D.sales.push({id:uid(),client:id,qty:details.qty,amount:details.amount,date:details.date,payment:details.payment,cashAmount:details.cashAmount,cardAmount:details.cardAmount,relay:src||""});
      }
    }
  }else{
    let newId=uid();
-   D.clients.push({id:newId,name,src,initial});
-   if(initial>0){
-     let d=prompt("Date des ventes initiales (AAAA-MM-JJ)",today());
-     if(d===null||!validDate(d)){D.clients=D.clients.filter(x=>x.id!==newId);alert("Client non enregistré : date invalide.");return}
-     let created=[];
-     for(let i=0;i<initial;i++){
-       let qty=prompt(`Unités de la vente ${i+1}/${initial}`,"1");
-       if(qty===null){D.clients=D.clients.filter(x=>x.id!==newId);D.sales=D.sales.filter(x=>!created.includes(x.id));alert("Client non enregistré : unités manquantes.");return}
-       qty=Math.max(1,Math.floor(Number(String(qty).replace(",","."))));
-       if(!Number.isFinite(qty)||qty<1){D.clients=D.clients.filter(x=>x.id!==newId);D.sales=D.sales.filter(x=>!created.includes(x.id));alert("Client non enregistré : unités invalides.");return}
-       let amount=prompt(`Prix total de la vente ${i+1}/${initial} (€)`,"");
-       if(amount===null){D.clients=D.clients.filter(x=>x.id!==newId);D.sales=D.sales.filter(x=>!created.includes(x.id));alert("Client non enregistré : prix manquant.");return}
-       amount=Number(String(amount).replace(",","."));
-       if(!Number.isFinite(amount)||amount<0){D.clients=D.clients.filter(x=>x.id!==newId);D.sales=D.sales.filter(x=>!created.includes(x.id));alert("Client non enregistré : prix invalide.");return}
-       let payment=prompt(`Paiement de la vente ${i+1}/${initial} : CASH ou CARTE`,`CASH`);
-       if(payment===null){D.clients=D.clients.filter(x=>x.id!==newId);D.sales=D.sales.filter(x=>!created.includes(x.id));alert("Client non enregistré : paiement manquant.");return}
-       payment=String(payment).trim().toLowerCase(); if(payment==="carte")payment="card";
-       if(payment!=="cash"&&payment!=="card"){alert("Paiement invalide.");return}
-       let sid=uid();created.push(sid);D.sales.push({id:sid,client:newId,qty,amount,date:d,payment,relay:src||""});
+   D.clients.push({id:newId,name,src,initial:0});
+   for(let i=0;i<initial;i++){
+     let details=askSaleDetails(`Vente initiale ${i+1}/${initial} pour ${name}`);
+     if(!details){
+       D.clients=D.clients.filter(x=>x.id!==newId);
+       D.sales=D.sales.filter(x=>x.client!==newId);
+       save();render();return;
      }
+     D.sales.push({id:uid(),client:newId,qty:details.qty,amount:details.amount,date:details.date,payment:details.payment,cashAmount:details.cashAmount,cardAmount:details.cardAmount,relay:src||""});
    }
+   const c=C(newId); if(c)c.initial=initial;
  }
  save();closeM();render();
 }
@@ -288,10 +282,28 @@ function addSale(clientId){
  let c=C(clientId);if(!c)return;
  let details=askSaleDetails(`Vente pour ${c.name}`);
  if(!details)return;
- D.sales.push({id:uid(),client:clientId,qty:details.qty,amount:details.amount,date:details.date,payment:details.payment,relay:c.src||""});save();render();
+ D.sales.push({id:uid(),client:clientId,qty:details.qty,amount:details.amount,date:details.date,payment:details.payment,cashAmount:details.cashAmount,cardAmount:details.cardAmount,relay:c.src||""});
+ save();render();
 }
 function quickDateSale(clientId){addSale(clientId)}
-function delSale(id){D.sales=D.sales.filter(x=>x.id!==id);save();render()}
+function delSale(id){if(!confirm("Supprimer cette vente ?"))return;D.sales=D.sales.filter(x=>x.id!==id);save();render()}
+function delClient(id){
+ const c=C(id); if(!c)return;
+ const n=D.sales.filter(x=>x.client===id).length;
+ if(!confirm(`Supprimer le client « ${c.name} » ?\n${n} transaction${n===1?"":"s"} liée${n===1?"":"s"} sera/seront aussi supprimée(s).`))return;
+ D.sales=D.sales.filter(x=>x.client!==id);
+ D.clients=D.clients.filter(x=>x.id!==id);
+ save();render();
+}
+function delPerson(id){
+ const p=P(id); if(!p)return;
+ const kids=personChildren(id).length;
+ if(!confirm(`Supprimer « ${p.name} » du réseau ?${kids?`\n${kids} filleul${kids===1?"":"s"} passeront sans parent.`:""}`))return;
+ D.people.forEach(x=>{if(x.parent===id)x.parent="";});
+ D.clients.forEach(c=>{if(c.src===id)c.src="";});
+ D.people=D.people.filter(x=>x.id!==id);
+ save();render();
+}
 function costForm(){openM("Nouveau coût",`<div class="form"><label>Type<select id="coty"><option>Produit</option><option>Livraison</option><option>Commission relais</option><option>Autre</option></select></label><label>Montant (€)<input id="coam" type="number" step=".01"></label><label>Date<input id="coda" type="date" value="${today()}"></label><label>Description<input id="codes"></label></div><br><button class="btn primary" onclick="saveCost()">Enregistrer</button>`)}
 function saveCost(){D.costs.push({id:uid(),type:coty.value,amount:+coam.value||0,date:coda.value,desc:codes.value});save();closeM();render()}
 function delCost(id){D.costs=D.costs.filter(x=>x.id!==id);save();render()}
@@ -302,7 +314,7 @@ function personForm(id="",parent=""){
 function savePerson(id){let name=pn.value.trim();if(!name)return alert("Indique un nom.");let parent=pp.value;if(id&&parent===id)parent="";let o={name,parent,bought:pb.checked};if(id)Object.assign(P(id),o);else D.people.push({id:uid(),...o});save();closeM();render()}
 function personChildren(id){return D.people.filter(x=>(x.parent||"")===id)}
 function branch(parent=""){
- return D.people.filter(x=>(x.parent||"")===parent).map(x=>{let kids=personChildren(x.id).length;return `<li><div class="node ${x.bought?"b":""}"><b>${esc(x.name)}</b><small>${x.bought?"✓ a acheté":"pas encore"} · ${kids} filleul${kids===1?"":"s"}</small><div class="actions"><button class="btn" onclick="personForm('${x.id}')">Modifier</button><button class="btn primary" onclick="personForm('', '${x.id}')">+ Filleul</button></div></div>${branch(x.id)}</li>`}).join("")
+ return D.people.filter(x=>(x.parent||"")===parent).map(x=>{let kids=personChildren(x.id).length;return `<li><div class="node ${x.bought?"b":""}"><b>${esc(x.name)}</b><small>${x.bought?"✓ a acheté":"pas encore"} · ${kids} filleul${kids===1?"":"s"}</small><div class="actions"><button class="btn" onclick="personForm('${x.id}')">Modifier</button><button class="btn primary" onclick="personForm('', '${x.id}')">+ Filleul</button><button class="btn danger" onclick="delPerson('${x.id}')">Supprimer</button></div></div>${branch(x.id)}</li>`}).join("")
 }
 function monthlyMap(){let m={};D.sales.forEach(s=>{if(s.date)m[ym(s.date)]=(m[ym(s.date)]||0)+1});return m}
 function clientMonthlyMap(){let m={};D.clients.forEach(c=>{let first=D.sales.filter(s=>s.client===c.id).map(s=>s.date).sort()[0];if(first)m[ym(first)]=(m[ym(first)]||0)+1});return m}
@@ -319,15 +331,15 @@ function render(){
  let ca=D.sales.reduce((a,x)=>a+(+x.amount||0),0),unitsTotal=D.sales.reduce((a,x)=>a+(+x.qty||1),0),costTotal=D.costs.reduce((a,x)=>a+(+x.amount||0),0),stats=actualMonthlyStats(),cur=currentYM(),thisMonth=D.sales.filter(s=>ym(s.date)===cur).length;
  hc.textContent=D.clients.length;hs.textContent=D.sales.length;hu.textContent=unitsTotal;ha.textContent=eur(ca);hp.textContent=eur(ca-costTotal);hperiod.textContent=`${stats.months[0]} → ${stats.months.at(-1)}`;
  makeChart("homechart",stats.sales,stats.months.map(monthLabel));
- let cashTotal=D.sales.filter(s=>(s.payment||"unknown")==="cash").reduce((a,x)=>a+(+x.amount||0),0),cardTotal=D.sales.filter(s=>(s.payment||"unknown")==="card").reduce((a,x)=>a+(+x.amount||0),0);
- hi.innerHTML=`<div class="row" style="padding:7px 0"><span>💵 Cash</span><b>${eur(cashTotal)}</b></div><div class="row" style="padding:7px 0"><span>💳 Carte</span><b>${eur(cardTotal)}</b></div><div class="row" style="padding:7px 0"><span>Personnes relais</span><b>${D.people.length}</b></div><div class="row" style="padding:7px 0"><span>Clients reliés</span><b>${D.clients.filter(x=>x.src).length}/${D.clients.length}</b></div><div class="row" style="padding:7px 0"><span>Panier moyen / vente</span><b>${eur(D.sales.length?ca/D.sales.length:0)}</b></div><div class="row" style="padding:7px 0"><span>Ventes ce mois</span><b>${thisMonth}</b></div>`;
+ let cashTotal=D.sales.reduce((a,x)=>a+(Number(x.cashAmount)!=null?Number(x.cashAmount):((x.payment||"")==="cash"?Number(x.amount||0):0)),0),cardTotal=D.sales.reduce((a,x)=>a+(Number(x.cardAmount)!=null?Number(x.cardAmount):((x.payment||"")==="card"?Number(x.amount||0):0)),0);
+ hi.innerHTML=`<div class="row" style="padding:7px 0"><span>💵 Cash encaissé</span><b>${eur(cashTotal)}</b></div><div class="row" style="padding:7px 0"><span>💳 Carte encaissée</span><b>${eur(cardTotal)}</b></div><div class="row" style="padding:7px 0"><span>Personnes relais</span><b>${D.people.length}</b></div><div class="row" style="padding:7px 0"><span>Clients reliés</span><b>${D.clients.filter(x=>x.src).length}/${D.clients.length}</b></div><div class="row" style="padding:7px 0"><span>Panier moyen / vente</span><b>${eur(D.sales.length?ca/D.sales.length:0)}</b></div><div class="row" style="padding:7px 0"><span>Ventes ce mois</span><b>${thisMonth}</b></div>`;
  let cp=D.goals.c?Math.min(100,D.clients.length/D.goals.c*100):0,cap=D.goals.ca?Math.min(100,ca/D.goals.ca*100):0;homegoal.innerHTML=`<div class="goalrow"><div class="row"><span>Clients</span><b>${D.clients.length}/${D.goals.c}</b></div><div class="bar"><i style="width:${cp}%"></i></div></div><div class="goalrow"><div class="row"><span>CA</span><b>${eur(ca)}/${eur(D.goals.ca)}</b></div><div class="bar alt"><i style="width:${cap}%"></i></div></div>`;
  ccount.textContent=D.clients.length;cbuyers.textContent=D.clients.filter(c=>clientStats(c.id).n>0).length;cunits.textContent=D.sales.length;cunitsprod.textContent=unitsTotal;cavg.textContent=eur(D.sales.length?ca/D.sales.length:0);
- ct.innerHTML=D.clients.length?D.clients.map(c=>{let s=clientStats(c.id);return `<tr><td><b>${esc(c.name)}</b></td><td><b>${s.n}</b> vente${s.n===1?"":"s"} · <b>${s.units}</b> unité${s.units===1?"":"s"} <button class="btn primary" onclick="addSale('${c.id}')">+1</button></td><td>${eur(s.ca)}</td><td>${esc(P(c.src)?.name||"Direct / inconnu")}</td><td>${s.last||"—"}</td><td><button class="btn" onclick="clientForm('${c.id}')">Modifier</button></td></tr>`}).join(""):'<tr><td colspan="6">Aucun client</td></tr>';
+ ct.innerHTML=D.clients.length?D.clients.map(c=>{let s=clientStats(c.id);return `<tr><td><b>${esc(c.name)}</b></td><td><b>${s.n}</b> vente${s.n===1?"":"s"} · <b>${s.units}</b> unité${s.units===1?"":"s"} <button class="btn primary" onclick="addSale('${c.id}')">+1</button></td><td>${eur(s.ca)}</td><td>${esc(P(c.src)?.name||"Direct / inconnu")}</td><td>${s.last||"—"}</td><td><button class="btn" onclick="clientForm('${c.id}')">Modifier</button> <button class="btn danger" onclick="delClient('${c.id}')">Supprimer</button></td></tr>`}).join(""):'<tr><td colspan="6">Aucun client</td></tr>';
  pcount.textContent=D.people.length;pbought.textContent=D.people.filter(x=>x.bought).length;plinked.textContent=D.clients.filter(x=>x.src).length;proots.textContent=D.people.filter(x=>!x.parent).length;
  tree.innerHTML=D.people.length?`<div class="tree"><ul>${branch()}</ul></div>`:"<div class='empty'>Ajoute des personnes pour créer ton arbre.</div>";
  sc.textContent=D.sales.length;su.textContent=unitsTotal;sa.textContent=eur(ca);sm.textContent=thisMonth;let activeDays=new Set(D.sales.filter(s=>ym(s.date)===cur).map(s=>s.date)).size;sd.textContent=activeDays?(thisMonth/activeDays).toFixed(1):"0";renderCalendar();makeChart("saleschart",stats.sales,stats.months.map(monthLabel));renderSalesButtons();
- st.innerHTML=D.sales.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(s=>`<tr><td>${s.date}</td><td>${esc(C(s.client)?.name||"—")}</td><td><b>${+s.qty||1}</b></td><td>${eur(s.amount)}</td><td>${s.payment==="card"?"💳 Carte":s.payment==="cash"?"💵 Cash":"—"}</td><td><button class="btn danger" onclick="delSale('${s.id}')">×</button></td></tr>`).join("")||'<tr><td colspan="6">Aucune vente</td></tr>';
+ st.innerHTML=D.sales.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(s=>`<tr><td>${s.date}</td><td>${esc(C(s.client)?.name||"—")}</td><td><b>${+s.qty||1}</b></td><td>${eur(s.amount)}<div class="muted" style="font-size:12px">💵 ${eur(s.cashAmount||0)} · 💳 ${eur(s.cardAmount||0)}</div></td><td>${s.payment==="mixed"?"💵 "+eur(s.cashAmount||0)+" + 💳 "+eur(s.cardAmount||0):s.payment==="card"?"💳 Carte":s.payment==="cash"?"💵 Cash":"—"}</td><td><button class="btn danger" onclick="delSale('${s.id}')">×</button></td></tr>`).join("")||'<tr><td colspan="6">Aucune vente</td></tr>';
  let totalCost=costTotal;document.getElementById("co").textContent=eur(totalCost);com.textContent=eur(D.costs.filter(x=>ym(x.date)===cur).reduce((a,x)=>a+(+x.amount||0),0));cos.textContent=eur(D.sales.length?totalCost/D.sales.length:0);coc.textContent=D.costs.length;cot.innerHTML=D.costs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(x=>`<tr><td>${x.date}</td><td>${esc(x.type)}</td><td>${esc(x.desc)}</td><td>${eur(x.amount)}</td><td><button class="btn danger" onclick="delCost('${x.id}')">×</button></td></tr>`).join("")||'<tr><td colspan="5">Aucun coût</td></tr>';
  gnew.textContent=stats.clients.at(-1)||0;gsales.textContent=stats.sales.at(-1)||0;let sgr=growthRate(stats.sales),cgr=growthRate(stats.clients);gsalesgrowth.textContent=sgr===null?"—":`${sgr>=0?"+":""}${sgr.toFixed(0)}%`;gclientgrowth.textContent=cgr===null?"—":`${cgr>=0?"+":""}${cgr.toFixed(0)}%`;makeChart("growthchart",stats.sales,stats.months.map(monthLabel));gt.innerHTML=projectClients(12);
  gc.value=D.goals.c;gm.value=D.goals.m;gca.value=D.goals.ca;goaltext.innerHTML=`<div class="row"><span>Clients</span><b>${D.clients.length}/${D.goals.c} — ${cp.toFixed(0)}%</b></div>`;goalca.textContent=`${eur(ca)} / ${eur(D.goals.ca)} — ${cap.toFixed(0)}%`;let timePct=Math.min(100,Math.max(0,1/D.goals.m*100));goaltime.textContent=`Échéance : ${D.goals.m} mois`;gtb.style.width=timePct+"%";gb.style.width=cp+"%";gab.style.width=cap+"%";
