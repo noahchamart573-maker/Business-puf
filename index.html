@@ -1,6 +1,21 @@
 <!doctype html>
 <html lang="fr">
 <head>
+
+<script id="one-time-clean-start">
+(function(){
+  const FLAG='business_os_clean_start_v1';
+  if(!localStorage.getItem(FLAG)){
+    localStorage.removeItem('business_os_data');
+    localStorage.removeItem('business_dashboard_data');
+    localStorage.removeItem('business_os');
+    localStorage.removeItem('businessData');
+    localStorage.removeItem('business_puf_data');
+    localStorage.setItem(FLAG,'1');
+  }
+})();
+</script>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#5856e8">
@@ -40,6 +55,67 @@ main{width:100%;max-width:1050px;min-width:0;margin:0 auto;padding:15px}
   #analyticsPanel{padding:10px!important}
   #analyticsPanel .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   #monthlySalesChart{height:100px!important;max-height:100px!important}
+}
+</style>
+
+<style id="final-mobile-layout">
+html,body{width:100%;max-width:100%;overflow-x:hidden;margin:0;padding:0}
+*{box-sizing:border-box}
+body{min-width:0}
+nav,.nav,.tabs,.tab-bar,.navigation,.menu{width:100%!important;max-width:100%!important;
+  display:flex!important;flex-wrap:wrap!important;overflow:visible!important;
+  gap:6px!important;padding:8px!important}
+nav button,.nav button,.tabs button,.tab-bar button,.navigation button,.menu button,
+nav a,.nav a,.tabs a,.tab-bar a,.navigation a,.menu a{
+  flex:0 0 auto!important;white-space:nowrap!important;max-width:100%!important}
+main,.container,.app,.content{width:100%!important;max-width:100%!important;min-width:0!important}
+@media(max-width:600px){
+  nav,.nav,.tabs,.tab-bar,.navigation,.menu{justify-content:flex-start!important}
+  nav button,.nav button,.tabs button,.tab-bar button,.navigation button,.menu button,
+  nav a,.nav a,.tabs a,.tab-bar a,.navigation a,.menu a{
+    font-size:13px!important;padding:9px 11px!important}
+}
+</style>
+
+<style id="final-chart-size">
+#monthlySalesChart{width:100%!important;height:120px!important;max-height:120px!important}
+#analyticsPanel{max-width:100%!important;overflow:hidden!important}
+</style>
+
+<style id="nav-final-rebuild">
+/* Navigation mobile : grille fixe, sans scroll horizontal */
+#nav{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  overflow-x:hidden!important;
+  overflow-y:visible!important;
+  flex-wrap:initial!important;
+  gap:6px!important;
+  padding:8px 0 0!important;
+  margin:0!important;
+}
+#nav button{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  margin:0!important;
+  white-space:normal!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  text-align:center!important;
+  min-height:42px!important;
+  padding:8px 5px!important;
+}
+@media(min-width:700px){
+  #nav{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+@media(max-width:380px){
+  #nav{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #nav button{font-size:12px!important}
 }
 </style>
 </head>
@@ -299,7 +375,12 @@ render();
 <script id="nav-scroll-fix">
 document.addEventListener('DOMContentLoaded',function(){
   const nav=document.getElementById('nav');
-  if(nav) nav.scrollLeft=0;
+  if(nav){
+    nav.scrollLeft=0;
+    nav.scrollLeft=0;
+    nav.style.transform='translateX(0)';
+  }
+  window.scrollTo(0,0);
 });
 </script>
 </body></html>
