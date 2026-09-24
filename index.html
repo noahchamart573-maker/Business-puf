@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="fr">
+<head>
+
+<script id="one-time-clean-start">
+(function(){
+  const FLAG='business_os_clean_start_v1';
+  if(!localStorage.getItem(FLAG)){
+    localStorage.removeItem('business_os_data');
+    localStorage.removeItem('business_dashboard_data');
+    localStorage.removeItem('business_os');
+    localStorage.removeItem('businessData');
+    localStorage.removeItem('business_puf_data');
+    localStorage.setItem(FLAG,'1');
+  }
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#5856e8">
+<title>Business OS</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6fa;color:#172033;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button{font:inherit}header{position:sticky;top:0;background:#fff;border-bottom:1px solid #e5e7eb;z-index:10;padding:14px 15px}h1{margin:0;font-size:23px}h2{margin:0 0 10px;font-size:19px}.muted{color:#6b7280;font-size:12px}.nav{display:flex;gap:6px;overflow:visible;margin-top:12px;padding-bottom:1px;flex-wrap:wrap}.nav button,.btn{white-space:nowrap;padding:9px 11px;border:1px solid #ddd;border-radius:9px;background:#fff;color:#172033}.nav .on,.primary{background:#5856e8!important;color:#fff!important;border-color:#5856e8!important;font-weight:700}.btn:active,.nav button:active{transform:scale(.98)}main{max-width:1050px;margin:auto;padding:15px}.page{display:none}.page.on{display:block}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:14px;margin-bottom:12px}.k{color:#6b7280;font-size:11px}.v{font-size:21px;font-weight:800;margin-top:5px}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.row.wrap{flex-wrap:wrap}.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{color:#6b7280;font-size:12px}input,select{width:100%;padding:10px;border:1px solid #dfe3ea;border-radius:9px;margin-top:5px;background:#fff;font-size:14px}input[type=checkbox]{width:auto;margin:0}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:600px}th,td{text-align:left;padding:9px;border-bottom:1px solid #eee;font-size:13px;vertical-align:middle}th{color:#6b7280;font-size:11px}.modal{display:none;position:fixed;inset:0;background:#0007;z-index:20;align-items:flex-end}.modal.open{display:flex}.modalbox{background:#fff;width:100%;padding:17px;border-radius:18px 18px 0 0;max-height:90vh;overflow:auto}.modalbox h2{margin-bottom:0}.hint{background:#f7f7ff;border:1px solid #e3e2ff;border-radius:10px;padding:10px;font-size:12px;color:#555b75}.statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.mini{background:#fafbff;border:1px solid #eceef5;border-radius:12px;padding:11px}.mini b{font-size:17px}.bar{height:9px;background:#eee;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:#5856e8;border-radius:9px}.bar.alt i{background:#34a27d}.danger{color:#b4233d!important;background:#fff0f2!important;border:0!important}.success{color:#176b4b;background:#ecfaf3;border-radius:7px;padding:3px 7px;font-size:11px}.pill{display:inline-block;padding:4px 7px;border-radius:999px;background:#eef0ff;color:#4c4aa9;font-size:11px}.bigbtn{width:100%;padding:12px;border-radius:11px;border:1px solid #ddd;background:#fff}.bigbtn.primary{border:0}.empty{padding:18px;text-align:center;color:#6b7280}.chart{display:flex;align-items:flex-end;gap:7px;height:140px;padding:18px 5px 25px;border-bottom:1px solid #ddd;overflow-x:auto}.col{min-width:32px;height:100%;display:flex;align-items:flex-end;justify-content:center;position:relative}.col i{display:block;width:22px;min-height:3px;background:#5856e8;border-radius:5px 5px 2px 2px}.col span{position:absolute;bottom:-22px;font-size:9px;color:#6b7280}.col em{position:absolute;top:-17px;font-style:normal;font-size:9px;color:#4b5563}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.day{min-height:42px;border:1px solid #eceef4;border-radius:7px;background:#fafafa;padding:4px;font-size:10px;position:relative}.day .num{color:#777}.day .count{font-size:13px;font-weight:800;margin-top:4px}.day.hot{background:#e9e8ff;border-color:#d7d5ff}.calendarhead{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}.calendarhead div{text-align:center;font-size:10px;color:#888}.treebox{overflow:auto;padding:8px;background:#fafbff;border:1px solid #e5e7eb;border-radius:12px}.tree{min-width:max-content;padding:12px}.tree ul{display:flex;justify-content:center;gap:14px;list-style:none;padding:18px 0 0;margin:0;position:relative}.tree li{display:flex;flex-direction:column;align-items:center;position:relative}.node{background:#fff;border:2px solid #dfe2ff;border-radius:12px;padding:9px 10px;min-width:125px;text-align:center;box-shadow:0 2px 6px #00000008}.node.b{border-color:#72c7a8}.node .actions{display:flex;justify-content:center;gap:5px;margin-top:7px}.node button{font-size:10px;padding:4px 6px}.node:before{content:"";position:absolute;top:0;left:50%;height:18px;border-left:1px solid #d7dae4}.tree>ul>li:before{display:none}.node small{display:block;color:#777;margin-top:3px}.linehint{font-size:11px;color:#777}.goalrow{margin:12px 0}.goalrow .row{margin-bottom:5px}@media(min-width:700px){.modal{align-items:center;justify-content:center}.modalbox{width:min(560px,92%);border-radius:16px}.grid{grid-template-columns:repeat(4,1fr)}.statgrid{grid-template-columns:repeat(4,1fr)}}@media(max-width:520px){.form{grid-template-columns:1fr}.calendar .day{min-height:38px}.tree{padding:5px}.nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;overflow:visible}.nav button{min-width:0;width:100%;padding:8px 4px;font-size:11px}.nav button:nth-child(7){grid-column:span 2}}
+</style>
+
+<style id="mobile-chart-fix">
+#analyticsPanel{width:100%;max-width:100%;box-sizing:border-box;overflow:hidden}
+#analyticsPanel .chart-wrap{width:100%;max-width:100%;overflow:hidden}
+#monthlySalesChart{display:block;width:100%!important;height:150px!important;max-height:150px!important}
+@media(max-width:600px){
+  #analyticsPanel{margin-top:10px;padding:12px}
+  #analyticsPanel .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  #analyticsPanel .chart-wrap{margin-top:10px}
+  #analyticsPanel .chart-wrap h3{font-size:15px;margin:4px 0 8px}
+  #monthlySalesChart{height:125px!important;max-height:125px!important}
+}
+</style>
+
+<style id="final-mobile-layout-fix">
+html,body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
+body{position:relative}
+header{width:100%;max-width:none;min-width:0}
+main{width:100%;max-width:1050px;min-width:0;margin:0 auto;padding:15px}
+.page,.card,.grid{min-width:0;max-width:100%}
+.nav{width:100%;max-width:100%;min-width:0;overflow:visible;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.nav button{min-width:0;width:100%;padding:8px 4px;font-size:11px}
+.nav button:nth-child(7){grid-column:span 2}
+#analyticsPanel{width:100%!important;max-width:100%!important;min-width:0!important;overflow:hidden!important}
+#analyticsPanel .chart-wrap{width:100%!important;max-width:100%!important;min-width:0!important;overflow:hidden!important}
+#monthlySalesChart{display:block!important;width:100%!important;max-width:100%!important;height:110px!important;max-height:110px!important}
+@media(max-width:600px){
+  main{padding:10px}
+  .card{padding:11px}
+  #analyticsPanel{padding:10px!important}
+  #analyticsPanel .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #monthlySalesChart{height:100px!important;max-height:100px!important}
+}
+</style>
+
+<style id="final-mobile-layout">
+html,body{width:100%;max-width:100%;overflow-x:hidden;margin:0;padding:0}
+*{box-sizing:border-box}
+body{min-width:0}
+nav,.nav,.tabs,.tab-bar,.navigation,.menu{width:100%!important;max-width:100%!important;
+  display:flex!important;flex-wrap:wrap!important;overflow:visible!important;
+  gap:6px!important;padding:8px!important}
+nav button,.nav button,.tabs button,.tab-bar button,.navigation button,.menu button,
+nav a,.nav a,.tabs a,.tab-bar a,.navigation a,.menu a{
+  flex:0 0 auto!important;white-space:nowrap!important;max-width:100%!important}
+main,.container,.app,.content{width:100%!important;max-width:100%!important;min-width:0!important}
+@media(max-width:600px){
+  nav,.nav,.tabs,.tab-bar,.navigation,.menu{justify-content:flex-start!important}
+  nav button,.nav button,.tabs button,.tab-bar button,.navigation button,.menu button,
+  nav a,.nav a,.tabs a,.tab-bar a,.navigation a,.menu a{
+    font-size:13px!important;padding:9px 11px!important}
+}
+</style>
+
+<style id="final-chart-size">
+#monthlySalesChart{width:100%!important;height:120px!important;max-height:120px!important}
+#analyticsPanel{max-width:100%!important;overflow:hidden!important}
+</style>
+
+<style id="nav-final-rebuild">
+/* Navigation mobile : grille fixe, sans scroll horizontal */
+#nav{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  overflow-x:hidden!important;
+  overflow-y:visible!important;
+  flex-wrap:initial!important;
+  gap:6px!important;
+  padding:8px 0 0!important;
+  margin:0!important;
+}
+#nav button{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  margin:0!important;
+  white-space:normal!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  text-align:center!important;
+  min-height:42px!important;
+  padding:8px 5px!important;
+}
+@media(min-width:700px){
+  #nav{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+@media(max-width:380px){
+  #nav{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #nav button{font-size:12px!important}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>Business OS</h1><div class="muted">Gestion par bouche-à-oreille</div>
+<div class="nav" id="nav">
+<button class="on" data-p="home">🏠 Synthèse</button><button data-p="clients">👤 Clients</button><button data-p="network">🌳 Réseau</button><button data-p="sales">💶 Ventes</button><button data-p="costs">📦 Coûts</button><button data-p="growth">📈 Croissance</button><button data-p="goals">🎯 Objectifs</button>
+</div>
+</header>
+<main>
+<section id="home" class="page on">
+<div class="grid">
+<div class="card"><div class="k">Clients</div><div class="v" id="hc">0</div></div>
+<div class="card"><div class="k">Ventes</div><div class="v" id="hs">0</div></div><div class="card"><div class="k">Unités vendues</div><div class="v" id="hu">0</div></div>
+<div class="card"><div class="k">CA</div><div class="v" id="ha">0 €</div></div>
+<div class="card"><div class="k">Bénéfice</div><div class="v" id="hp">0 €</div></div>
+</div>
+<div class="card"><div class="row"><h2>Évolution</h2><span class="pill" id="hperiod">—</span></div><div class="chart" id="homechart"></div></div>
+<div class="card"><h2>Vue générale</h2><div id="hi"></div></div>
+<div class="card"><h2>Objectif</h2><div id="homegoal"></div></div>
+</section>
+
+<section id="clients" class="page">
+<div class="row wrap"><div><h2>Clients</h2><span class="muted">Ici, tu crées tes clients et tu suis leur nombre de ventes.</span></div><button class="btn primary" onclick="clientForm()">+ Client</button></div>
+<div class="card"><div class="statgrid"><div class="mini"><div class="k">Clients</div><b id="ccount">0</b></div><div class="mini"><div class="k">Clients ayant acheté</div><b id="cbuyers">0</b></div><div class="mini"><div class="k">Transactions</div><b id="cunits">0</b></div><div class="mini"><div class="k">Unités vendues</div><b id="cunitsprod">0</b></div><div class="mini"><div class="k">Panier moyen</div><b id="cavg">0 €</b></div></div></div>
+<div class="card scroll"><table><thead><tr><th>Client</th><th>Ventes / unités</th><th>CA</th><th>Relais</th><th>Dernière vente</th><th></th></tr></thead><tbody id="ct"></tbody></table></div>
+</section>
+
+<section id="network" class="page">
+<div class="row wrap"><div><h2>🌳 Réseau</h2><span class="muted">Chaque personne peut avoir un relais parent et des filleuls.</span></div><button class="btn primary" onclick="personForm()">+ Personne</button></div>
+<div class="card"><div class="statgrid"><div class="mini"><div class="k">Personnes</div><b id="pcount">0</b></div><div class="mini"><div class="k">Ont déjà acheté</div><b id="pbought">0</b></div><div class="mini"><div class="k">Clients reliés</div><b id="plinked">0</b></div><div class="mini"><div class="k">Sans parent</div><b id="proots">0</b></div></div></div>
+<div class="card"><div class="hint">💡 Appuie sur <b>+ Filleul</b> directement sur une personne pour construire l'arbre plus vite.</div></div>
+<div class="card"><div class="treebox" id="tree"></div></div>
+</section>
+
+<section id="sales" class="page">
+<div class="row wrap"><div><h2>💶 Ventes</h2><span class="muted">Plus besoin de saisir une vente complète : +1 suffit.</span></div></div>
+<div class="card"><div class="hint">Chaque <b>+1 vente</b> te demande directement <b>le nombre d’unités</b>, <b>le prix total réellement vendu</b> et <b>la date</b>. Une transaction peut donc contenir 1, 2, 3, 4… unités.</div></div>
+<div class="grid"><div class="card"><div class="k">Transactions</div><div class="v" id="sc">0</div></div><div class="card"><div class="k">Unités vendues</div><div class="v" id="su">0</div></div><div class="card"><div class="k">CA</div><div class="v" id="sa">0 €</div></div><div class="card"><div class="k">Ce mois</div><div class="v" id="sm">0</div></div><div class="card"><div class="k">Moyenne / jour actif</div><div class="v" id="sd">0</div></div></div>
+<div class="card"><h2>Calendrier des ventes</h2><div class="calendarhead"><div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div></div><div class="calendar" id="calendar"></div></div>
+<div class="card"><h2>Ventes par mois</h2><div class="chart" id="saleschart"></div></div>
+<div class="card"><h2>Ajouter une vente</h2><div class="hint">+1 ajoute une transaction. Tu indiques ensuite le <b>nombre d’unités</b>, la part cash, la part carte et la date.</div><div id="salebuttons"></div></div>
+<div class="card scroll"><table><thead><tr><th>Date</th><th>Client</th><th>Unités</th><th>Montant</th><th></th></tr></thead><tbody id="st"></tbody></table></div>
+</section>
+
+<section id="costs" class="page">
+<div class="row wrap"><div><h2>📦 Coûts</h2><span class="muted">Les coûts réels uniquement.</span></div><button class="btn primary" onclick="costForm()">+ Coût</button></div>
+<div class="card"><div class="statgrid"><div class="mini"><div class="k">Total</div><b id="co">0 €</b></div><div class="mini"><div class="k">Ce mois</div><b id="com">0 €</b></div><div class="mini"><div class="k">Coût / vente</div><b id="cos">0 €</b></div><div class="mini"><div class="k">Nombre</div><b id="coc">0</b></div></div></div>
+<div class="card scroll"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Montant</th><th></th></tr></thead><tbody id="cot"></tbody></table></div>
+</section>
+
+<section id="growth" class="page">
+<h2>📈 Croissance</h2>
+<div class="card"><div class="hint">La croissance se calcule maintenant automatiquement à partir de tes <b>vraies ventes et de tes vrais clients</b>. Tu n'as plus besoin d'entrer une croissance théorique.</div></div>
+<div class="card"><div class="statgrid"><div class="mini"><div class="k">Nouveaux clients / mois</div><b id="gnew">0</b></div><div class="mini"><div class="k">Ventes / mois</div><b id="gsales">0</b></div><div class="mini"><div class="k">Croissance ventes</div><b id="gsalesgrowth">—</b></div><div class="mini"><div class="k">Croissance clients</div><b id="gclientgrowth">—</b></div></div></div>
+<div class="card"><h2>Évolution réelle</h2><div class="chart" id="growthchart"></div></div>
+<div class="card"><h2>12 mois — projection automatique</h2><div id="gt"></div><div class="muted" style="margin-top:10px">Projection basée sur ton rythme réel observé, sans remplacer les données réelles.</div></div>
+</section>
+
+<section id="goals" class="page">
+<h2>🎯 Objectifs</h2>
+<div class="card"><div class="form"><label>Clients cible<input id="gc" type="number" min="0"></label><label>Échéance (mois)<input id="gm" type="number" min="1"></label><label>CA cible (€)<input id="gca" type="number" min="0" step=".01"></label></div><br><button class="btn primary" onclick="goalSave()">Enregistrer</button></div>
+<div class="card"><h2>Progression réelle</h2><div id="goaltext"></div><div class="bar"><i id="gb"></i></div><div class="goalrow"><div class="row"><span>CA</span><b id="goalca"></b></div><div class="bar alt"><i id="gab"></i></div></div><div class="goalrow"><div class="row"><span>Temps écoulé</span><b id="goaltime"></b></div><div class="bar"><i id="gtb"></i></div></div></div>
+<div class="card"><h2>Ce qu'il faut faire pour atteindre l'objectif</h2><div id="goalneed"></div></div>
+</section>
+
+
+</main>
+
+<div class="modal" id="modal"><div class="modalbox"><div class="row"><h2 id="mt">Ajouter</h2><button class="btn" onclick="closeM()">Fermer</button></div><div id="mb"></div></div></div>
+
+<script>
+const K="business_os_data";
+let D=JSON.parse(localStorage.getItem(K)||"null")||{clients:[],people:[],sales:[],costs:[],goals:{c:100,m:12,ca:2500}};
+D.clients=D.clients||[];D.people=D.people||[];D.sales=D.sales||[];D.costs=D.costs||[];D.goals=D.goals||{c:100,m:12,ca:2500};
+D.sales.forEach(x=>{
+  if(!Number.isFinite(+x.qty)||+x.qty<1)x.qty=1;
+  const amount=Number(x.amount||0);
+  if(x.cashAmount==null && x.cardAmount==null){
+    if(x.payment==="card"){x.cashAmount=0;x.cardAmount=amount;}
+    else {x.cashAmount=amount;x.cardAmount=0;}
+  } else {
+    x.cashAmount=Number(x.cashAmount||0);
+    x.cardAmount=Number(x.cardAmount||0);
+  }
+});
+const save=()=>localStorage.setItem(K,JSON.stringify(D));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
+const eur=n=>new Intl.NumberFormat("fr-BE",{style:"currency",currency:"EUR"}).format(n||0);
+const C=id=>D.clients.find(x=>x.id===id);
+const P=id=>D.people.find(x=>x.id===id);
+const esc=s=>String(s??"").replace(/[&<>\"]/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[x]));
+const today=()=>new Date().toISOString().slice(0,10);
+const ym=d=>String(d||"").slice(0,7);
+const currentYM=()=>today().slice(0,7);
+const monthLabel=k=>{let [y,m]=k.split("-").map(Number);return new Date(y,m-1,1).toLocaleDateString("fr-BE",{month:"short",year:"2-digit"}).replace(" "," ")};
+function optsP(v=""){return '<option value="">Direct / inconnu</option>'+D.people.map(x=>`<option value="${x.id}" ${x.id==v?"selected":""}>${esc(x.name)}</option>`).join("")}
+function openM(t,b){mt.textContent=t;mb.innerHTML=b;modal.classList.add("open")}
+function closeM(){modal.classList.remove("open")}
+function clientStats(id){let s=D.sales.filter(x=>x.client===id);return {n:s.length,units:s.reduce((a,x)=>a+(+x.qty||1),0),ca:s.reduce((a,x)=>a+(+x.amount||0),0),last:s.map(x=>x.date).sort().pop()||""}}
+function clientForm(id=""){
+ let c=C(id)||{name:"",src:"",initial:0};
+ openM(id?"Modifier client":"Nouveau client",`<label>Nom<input id="mn" value="${esc(c.name)}"></label><br><label>Relais<select id="ms">${optsP(c.src)}</select></label><br><label>Ventes initiales<input id="mi" type="number" min="0" value="${c.initial||0}"></label><br><div class="hint">Les ventes initiales correspondent au nombre de transactions déjà réalisées. Pour chaque vente, tu indiqueras ensuite le <b>nombre d’unités</b>, le prix et la date.</div><br><button class="btn primary" onclick="saveClient('${id}')">Enregistrer</button>`);
+}
+function validDate(d){return /^\d{4}-\d{2}-\d{2}$/.test(d)}
+function askSaleDetails(label="Vente"){
+ let qty=prompt(`${label} — Nombre d’unités vendues`,"1");
+ if(qty===null)return null;
+ qty=Math.max(1,Math.floor(Number(String(qty).replace(",","."))));
+ if(!Number.isFinite(qty)||qty<1){alert("Nombre d’unités invalide.");return null}
+
+ let cash=prompt(`${label} — Montant payé en CASH (€)`,`0`);
+ if(cash===null)return null;
+ cash=Number(String(cash).replace(",","."));
+ if(!Number.isFinite(cash)||cash<0){alert("Montant cash invalide.");return null}
+
+ let card=prompt(`${label} — Montant payé par CARTE (€)`,`0`);
+ if(card===null)return null;
+ card=Number(String(card).replace(",","."));
+ if(!Number.isFinite(card)||card<0){alert("Montant carte invalide.");return null}
+
+ const amount=Number((cash+card).toFixed(2));
+ if(amount<=0){alert("La vente doit avoir un montant supérieur à 0 €.");return null}
+
+ let d=prompt(`${label} — Date (AAAA-MM-JJ)`,today());
+ if(d===null)return null;
+ if(!validDate(d)){alert("Format de date invalide.");return null}
+
+ return {qty,amount,date:d,payment:(cash>0&&card>0)?"mixed":(cash>0?"cash":"card"),cashAmount:cash,cardAmount:card};
+}
+function saveClient(id){
+ let name=mn.value.trim();
+ if(!name)return alert("Indique un nom.");
+ let initial=Math.max(0,+mi.value||0),src=ms.value;
+ if(id){
+   let c=C(id),old=+c.initial||0;
+   Object.assign(c,{name,src,initial});
+   let diff=initial-old;
+   if(diff>0){
+     for(let i=0;i<diff;i++){
+       let details=askSaleDetails(`Vente initiale ${i+1}/${diff} pour ${name}`);
+       if(!details){c.initial=old;save();render();return}
+       D.sales.push({id:uid(),client:id,qty:details.qty,amount:details.amount,date:details.date,payment:details.payment,cashAmount:details.cashAmount,cardAmount:details.cardAmount,relay:src||""});
+     }
+   }
+ }else{
+   let newId=uid();
+   D.clients.push({id:newId,name,src,initial:0});
+   for(let i=0;i<initial;i++){
+     let details=askSaleDetails(`Vente initiale ${i+1}/${initial} pour ${name}`);
+     if(!details){
+       D.clients=D.clients.filter(x=>x.id!==newId);
+       D.sales=D.sales.filter(x=>x.client!==newId);
+       save();render();return;
+     }
+     D.sales.push({id:uid(),client:newId,qty:details.qty,amount:details.amount,date:details.date,payment:details.payment,cashAmount:details.cashAmount,cardAmount:details.cardAmount,relay:src||""});
+   }
+   const c=C(newId); if(c)c.initial=initial;
+ }
+ save();closeM();render();
+}
+function addSale(clientId){
+ let c=C(clientId);if(!c)return;
+ let details=askSaleDetails(`Vente pour ${c.name}`);
+ if(!details)return;
+ D.sales.push({id:uid(),client:clientId,qty:details.qty,amount:details.amount,date:details.date,payment:details.payment,cashAmount:details.cashAmount,cardAmount:details.cardAmount,relay:c.src||""});
+ save();render();
+}
+function quickDateSale(clientId){addSale(clientId)}
+function delSale(id){if(!confirm("Supprimer cette vente ?"))return;D.sales=D.sales.filter(x=>x.id!==id);save();render()}
+function delClient(id){
+ const c=C(id); if(!c)return;
+ const n=D.sales.filter(x=>x.client===id).length;
+ if(!confirm(`Supprimer le client « ${c.name} » ?\n${n} transaction${n===1?"":"s"} liée${n===1?"":"s"} sera/seront aussi supprimée(s).`))return;
+ D.sales=D.sales.filter(x=>x.client!==id);
+ D.clients=D.clients.filter(x=>x.id!==id);
+ save();render();
+}
+function delPerson(id){
+ const p=P(id); if(!p)return;
+ const kids=personChildren(id).length;
+ if(!confirm(`Supprimer « ${p.name} » du réseau ?${kids?`\n${kids} filleul${kids===1?"":"s"} passeront sans parent.`:""}`))return;
+ D.people.forEach(x=>{if(x.parent===id)x.parent="";});
+ D.clients.forEach(c=>{if(c.src===id)c.src="";});
+ D.people=D.people.filter(x=>x.id!==id);
+ save();render();
+}
+function costForm(){openM("Nouveau coût",`<div class="form"><label>Type<select id="coty"><option>Produit</option><option>Livraison</option><option>Commission relais</option><option>Autre</option></select></label><label>Montant (€)<input id="coam" type="number" step=".01"></label><label>Date<input id="coda" type="date" value="${today()}"></label><label>Description<input id="codes"></label></div><br><button class="btn primary" onclick="saveCost()">Enregistrer</button>`)}
+function saveCost(){D.costs.push({id:uid(),type:coty.value,amount:+coam.value||0,date:coda.value,desc:codes.value});save();closeM();render()}
+function delCost(id){D.costs=D.costs.filter(x=>x.id!==id);save();render()}
+function personForm(id="",parent=""){
+ let p=P(id)||{name:"",parent:parent||"",bought:false};let others=D.people.filter(x=>x.id!==id);
+ openM(id?"Modifier personne":"Nouvelle personne",`<label>Nom<input id="pn" value="${esc(p.name)}"></label><br><label>Rattaché à<select id="pp"><option value="">Aucun</option>${others.map(x=>`<option value="${x.id}" ${x.id==p.parent?"selected":""}>${esc(x.name)}</option>`).join("")}</select></label><br><label><input id="pb" type="checkbox" ${p.bought?"checked":""}> A déjà acheté</label><br><br><button class="btn primary" onclick="savePerson('${id}')">Enregistrer</button>`);
+}
+function savePerson(id){let name=pn.value.trim();if(!name)return alert("Indique un nom.");let parent=pp.value;if(id&&parent===id)parent="";let o={name,parent,bought:pb.checked};if(id)Object.assign(P(id),o);else D.people.push({id:uid(),...o});save();closeM();render()}
+function personChildren(id){return D.people.filter(x=>(x.parent||"")===id)}
+function branch(parent=""){
+ return D.people.filter(x=>(x.parent||"")===parent).map(x=>{let kids=personChildren(x.id).length;return `<li><div class="node ${x.bought?"b":""}"><b>${esc(x.name)}</b><small>${x.bought?"✓ a acheté":"pas encore"} · ${kids} filleul${kids===1?"":"s"}</small><div class="actions"><button class="btn" onclick="personForm('${x.id}')">Modifier</button><button class="btn primary" onclick="personForm('', '${x.id}')">+ Filleul</button><button class="btn danger" onclick="delPerson('${x.id}')">Supprimer</button></div></div>${branch(x.id)}</li>`}).join("")
+}
+function monthlyMap(){let m={};D.sales.forEach(s=>{if(s.date)m[ym(s.date)]=(m[ym(s.date)]||0)+1});return m}
+function clientMonthlyMap(){let m={};D.clients.forEach(c=>{let first=D.sales.filter(s=>s.client===c.id).map(s=>s.date).sort()[0];if(first)m[ym(first)]=(m[ym(first)]||0)+1});return m}
+function lastMonths(n=6){let out=[];let d=new Date();d.setDate(1);for(let i=n-1;i>=0;i--){let x=new Date(d.getFullYear(),d.getMonth()-i,1);out.push(x.toISOString().slice(0,7))}return out}
+function makeChart(elId,vals,labels){let el=document.getElementById(elId);let max=Math.max(1,...vals);el.innerHTML=vals.map((v,i)=>`<div class="col"><em>${v||0}</em><i style="height:${Math.max(3,v/max*135)}px"></i><span>${labels[i]}</span></div>`).join("")}
+function actualMonthlyStats(){let months=lastMonths(6),sm=monthlyMap(),cm=clientMonthlyMap();return {months,sales:months.map(m=>sm[m]||0),clients:months.map(m=>cm[m]||0)}}
+function growthRate(vals){if(vals.length<2)return null;let a=vals[vals.length-2],b=vals[vals.length-1];if(a===0)return b>0?null:0;return (b/a-1)*100}
+function avgRecent(vals){let nz=vals.filter(v=>v>0);return nz.length?nz.reduce((a,b)=>a+b,0)/nz.length:0}
+function projectClients(months){let actual=D.clients.length,stats=actualMonthlyStats(),rate=growthRate(stats.clients);let additions=avgRecent(stats.clients);let rows="";for(let i=1;i<=months;i++){let add=rate!==null?Math.max(0,additions*Math.pow(1+Math.max(-.9,rate/100),i-1)):additions;actual+=add;rows+=`<div class="row" style="margin:8px 0"><span>M${i}</span><b>${Math.round(actual)} clients</b></div>`}return rows}
+function goalSave(){D.goals.c=Math.max(0,+gc.value||0);D.goals.m=Math.max(1,+gm.value||1);D.goals.ca=Math.max(0,+gca.value||0);save();render()}
+function renderCalendar(){let el=calendar,now=new Date(),y=now.getFullYear(),m=now.getMonth(),first=new Date(y,m,1),days=new Date(y,m+1,0).getDate(),offset=(first.getDay()+6)%7,counts={},units={};D.sales.forEach(s=>{if(s.date&&s.date.slice(0,7)===`${y}-${String(m+1).padStart(2,"0")}`){counts[s.date]=(counts[s.date]||0)+1;units[s.date]=(units[s.date]||0)+(+s.qty||1)}});let h="";for(let i=0;i<offset;i++)h+='<div class="day"></div>';for(let d=1;d<=days;d++){let key=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,n=counts[key]||0;h+=`<div class="day ${n?"hot":""}"><div class="num">${d}</div><div class="count">${n?"+"+n+" vente"+(n>1?"s":"")+" · "+(units[key]||0)+" u.":""}</div></div>`}el.innerHTML=h}
+function renderSalesButtons(){if(!D.clients.length){salebuttons.innerHTML='<div class="empty">Ajoute d’abord un client dans l’onglet Clients.</div>';return}salebuttons.innerHTML=D.clients.map(c=>{let st=clientStats(c.id);return `<div class="row" style="padding:9px 0;border-bottom:1px solid #eee"><div><b>${esc(c.name)}</b><div class="muted">${st.n} vente${st.n===1?"":"s"} · ${st.units} unité${st.units===1?"":"s"} · ${eur(st.ca)}</div></div><button class="btn primary" onclick="addSale('${c.id}')">+1 vente</button></div>`}).join("")}
+function render(){
+ let ca=D.sales.reduce((a,x)=>a+(+x.amount||0),0),unitsTotal=D.sales.reduce((a,x)=>a+(+x.qty||1),0),costTotal=D.costs.reduce((a,x)=>a+(+x.amount||0),0),stats=actualMonthlyStats(),cur=currentYM(),thisMonth=D.sales.filter(s=>ym(s.date)===cur).length;
+ hc.textContent=D.clients.length;hs.textContent=D.sales.length;hu.textContent=unitsTotal;ha.textContent=eur(ca);hp.textContent=eur(ca-costTotal);hperiod.textContent=`${stats.months[0]} → ${stats.months.at(-1)}`;
+ makeChart("homechart",stats.sales,stats.months.map(monthLabel));
+ let cashTotal=D.sales.reduce((a,x)=>a+(Number(x.cashAmount)!=null?Number(x.cashAmount):((x.payment||"")==="cash"?Number(x.amount||0):0)),0),cardTotal=D.sales.reduce((a,x)=>a+(Number(x.cardAmount)!=null?Number(x.cardAmount):((x.payment||"")==="card"?Number(x.amount||0):0)),0);
+ hi.innerHTML=`<div class="row" style="padding:7px 0"><span>💵 Cash encaissé</span><b>${eur(cashTotal)}</b></div><div class="row" style="padding:7px 0"><span>💳 Carte encaissée</span><b>${eur(cardTotal)}</b></div><div class="row" style="padding:7px 0"><span>Personnes relais</span><b>${D.people.length}</b></div><div class="row" style="padding:7px 0"><span>Clients reliés</span><b>${D.clients.filter(x=>x.src).length}/${D.clients.length}</b></div><div class="row" style="padding:7px 0"><span>Panier moyen / vente</span><b>${eur(D.sales.length?ca/D.sales.length:0)}</b></div><div class="row" style="padding:7px 0"><span>Ventes ce mois</span><b>${thisMonth}</b></div>`;
+ let cp=D.goals.c?Math.min(100,D.clients.length/D.goals.c*100):0,cap=D.goals.ca?Math.min(100,ca/D.goals.ca*100):0;homegoal.innerHTML=`<div class="goalrow"><div class="row"><span>Clients</span><b>${D.clients.length}/${D.goals.c}</b></div><div class="bar"><i style="width:${cp}%"></i></div></div><div class="goalrow"><div class="row"><span>CA</span><b>${eur(ca)}/${eur(D.goals.ca)}</b></div><div class="bar alt"><i style="width:${cap}%"></i></div></div>`;
+ ccount.textContent=D.clients.length;cbuyers.textContent=D.clients.filter(c=>clientStats(c.id).n>0).length;cunits.textContent=D.sales.length;cunitsprod.textContent=unitsTotal;cavg.textContent=eur(D.sales.length?ca/D.sales.length:0);
+ ct.innerHTML=D.clients.length?D.clients.map(c=>{let s=clientStats(c.id);return `<tr><td><b>${esc(c.name)}</b></td><td><b>${s.n}</b> vente${s.n===1?"":"s"} · <b>${s.units}</b> unité${s.units===1?"":"s"} <button class="btn primary" onclick="addSale('${c.id}')">+1</button></td><td>${eur(s.ca)}</td><td>${esc(P(c.src)?.name||"Direct / inconnu")}</td><td>${s.last||"—"}</td><td><button class="btn" onclick="clientForm('${c.id}')">Modifier</button> <button class="btn danger" onclick="delClient('${c.id}')">Supprimer</button></td></tr>`}).join(""):'<tr><td colspan="6">Aucun client</td></tr>';
+ pcount.textContent=D.people.length;pbought.textContent=D.people.filter(x=>x.bought).length;plinked.textContent=D.clients.filter(x=>x.src).length;proots.textContent=D.people.filter(x=>!x.parent).length;
+ tree.innerHTML=D.people.length?`<div class="tree"><ul>${branch()}</ul></div>`:"<div class='empty'>Ajoute des personnes pour créer ton arbre.</div>";
+ sc.textContent=D.sales.length;su.textContent=unitsTotal;sa.textContent=eur(ca);sm.textContent=thisMonth;let activeDays=new Set(D.sales.filter(s=>ym(s.date)===cur).map(s=>s.date)).size;sd.textContent=activeDays?(thisMonth/activeDays).toFixed(1):"0";renderCalendar();makeChart("saleschart",stats.sales,stats.months.map(monthLabel));renderSalesButtons();
+ st.innerHTML=D.sales.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(s=>`<tr><td>${s.date}</td><td>${esc(C(s.client)?.name||"—")}</td><td><b>${+s.qty||1}</b></td><td>${eur(s.amount)}<div class="muted" style="font-size:12px">💵 ${eur(s.cashAmount||0)} · 💳 ${eur(s.cardAmount||0)}</div></td><td>${s.payment==="mixed"?"💵 "+eur(s.cashAmount||0)+" + 💳 "+eur(s.cardAmount||0):s.payment==="card"?"💳 Carte":s.payment==="cash"?"💵 Cash":"—"}</td><td><button class="btn danger" onclick="delSale('${s.id}')">×</button></td></tr>`).join("")||'<tr><td colspan="6">Aucune vente</td></tr>';
+ let totalCost=costTotal;document.getElementById("co").textContent=eur(totalCost);com.textContent=eur(D.costs.filter(x=>ym(x.date)===cur).reduce((a,x)=>a+(+x.amount||0),0));cos.textContent=eur(D.sales.length?totalCost/D.sales.length:0);coc.textContent=D.costs.length;cot.innerHTML=D.costs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(x=>`<tr><td>${x.date}</td><td>${esc(x.type)}</td><td>${esc(x.desc)}</td><td>${eur(x.amount)}</td><td><button class="btn danger" onclick="delCost('${x.id}')">×</button></td></tr>`).join("")||'<tr><td colspan="5">Aucun coût</td></tr>';
+ gnew.textContent=stats.clients.at(-1)||0;gsales.textContent=stats.sales.at(-1)||0;let sgr=growthRate(stats.sales),cgr=growthRate(stats.clients);gsalesgrowth.textContent=sgr===null?"—":`${sgr>=0?"+":""}${sgr.toFixed(0)}%`;gclientgrowth.textContent=cgr===null?"—":`${cgr>=0?"+":""}${cgr.toFixed(0)}%`;makeChart("growthchart",stats.sales,stats.months.map(monthLabel));gt.innerHTML=projectClients(12);
+ gc.value=D.goals.c;gm.value=D.goals.m;gca.value=D.goals.ca;goaltext.innerHTML=`<div class="row"><span>Clients</span><b>${D.clients.length}/${D.goals.c} — ${cp.toFixed(0)}%</b></div>`;goalca.textContent=`${eur(ca)} / ${eur(D.goals.ca)} — ${cap.toFixed(0)}%`;let timePct=Math.min(100,Math.max(0,1/D.goals.m*100));goaltime.textContent=`Échéance : ${D.goals.m} mois`;gtb.style.width=timePct+"%";gb.style.width=cp+"%";gab.style.width=cap+"%";
+ let needC=Math.max(0,D.goals.c-D.clients.length),needCA=Math.max(0,D.goals.ca-ca),months=D.goals.m,avgNew=avgRecent(stats.clients),avgCA=stats.sales.length?ca/Math.max(1,stats.sales.length):0;goalneed.innerHTML=`<div class="row" style="padding:8px 0"><span>Clients encore nécessaires</span><b>${needC}</b></div><div class="row" style="padding:8px 0"><span>≈ nouveaux clients / mois nécessaires</span><b>${(needC/months).toFixed(1)}</b></div><div class="row" style="padding:8px 0"><span>CA encore nécessaire</span><b>${eur(needCA)}</b></div><div class="row" style="padding:8px 0"><span>Ventes / mois nécessaires au rythme actuel</span><b>${avgCA?Math.ceil(needCA/avgCA/months):"—"}</b></div><div class="hint" style="margin-top:8px">Ton rythme récent de nouveaux clients est d’environ <b>${avgNew.toFixed(1)}/mois</b>. Les projections se recalculent automatiquement quand tu ajoutes des ventes ou des clients.</div>`;
+}
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".page").forEach(x=>x.classList.remove("on"));document.getElementById(b.dataset.p).classList.add("on");document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("on"));b.classList.add("on");render()});
+render();
+</script>
+
+<div id="synthesisPaymentBreakdown" class="payment-overview">
+  <h3>💳 Répartition des ventes</h3>
+  <div class="payment-cards">
+    <div><strong id="synthCash">0,00 €</strong><span>💵 Cash</span></div>
+    <div><strong id="synthCard">0,00 €</strong><span>💳 Carte</span></div>
+  </div>
+</div>
+
+
+
+
+
+<script id="data-migration">
+(function(){
+  function migrate(){
+    const current=localStorage.getItem('business_os_data');
+    if(current) return;
+    const legacyKeys=['business_dashboard_data','business_os','businessData','business_puf_data'];
+    for(const k of legacyKeys){
+      const v=localStorage.getItem(k);
+      if(v){
+        try{
+          const d=JSON.parse(v);
+          if(d && typeof d==='object'){
+            localStorage.setItem('business_os_data',JSON.stringify(d));
+            return;
+          }
+        }catch(e){}
+      }
+    }
+  }
+  migrate();
+})();
+</script>
+
+<script id="nav-scroll-fix">
+document.addEventListener('DOMContentLoaded',function(){
+  const nav=document.getElementById('nav');
+  if(nav){
+    nav.scrollLeft=0;
+    nav.scrollLeft=0;
+    nav.style.transform='translateX(0)';
+  }
+  window.scrollTo(0,0);
+});
+</script>
+</body></html>
