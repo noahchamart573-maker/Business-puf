@@ -125,6 +125,7 @@ main,.container,.app,.content{width:100%!important;max-width:100%!important;min-
 <div class="nav" id="nav">
 <button class="on" data-p="home">🏠 Synthèse</button><button data-p="clients">👤 Clients</button><button data-p="network">🌳 Réseau</button><button data-p="sales">💶 Ventes</button><button data-p="costs">📦 Coûts</button><button data-p="growth">📈 Croissance</button><button data-p="goals">🎯 Objectifs</button>
 </div>
+<div style="margin-top:10px"><button class="btn" type="button" onclick="exportGameData()">⬇️ Exporter mes données</button></div>
 </header>
 <main>
 <section id="home" class="page on">
@@ -189,6 +190,28 @@ main,.container,.app,.content{width:100%!important;max-width:100%!important;min-
 <div class="modal" id="modal"><div class="modalbox"><div class="row"><h2 id="mt">Ajouter</h2><button class="btn" onclick="closeM()">Fermer</button></div><div id="mb"></div></div></div>
 
 <script>
+function exportGameData(){
+  const snapshot={exportedAt:new Date().toISOString(),source:location.href,storage:{}};
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    snapshot.storage[key]=localStorage.getItem(key);
+  }
+  const payload=new Blob([JSON.stringify(snapshot,null,2)],{type:"application/json"});
+  const filename="business-puff-backup-"+new Date().toISOString().slice(0,10)+".json";
+  const file=new File([payload],filename,{type:"application/json"});
+  if(navigator.canShare && navigator.canShare({files:[file]}) && navigator.share){
+    navigator.share({title:"Sauvegarde Business Puff",files:[file]}).catch(()=>downloadBackup(payload,filename));
+  }else{
+    downloadBackup(payload,filename);
+  }
+}
+function downloadBackup(blob,filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download=filename;a.style.display="none";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
 const K="business_os_data";
 let D=JSON.parse(localStorage.getItem(K)||"null")||{clients:[],people:[],sales:[],costs:[],goals:{c:100,m:12,ca:2500}};
 D.clients=D.clients||[];D.people=D.people||[];D.sales=D.sales||[];D.costs=D.costs||[];D.goals=D.goals||{c:100,m:12,ca:2500};
